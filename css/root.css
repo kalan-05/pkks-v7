@@ -1,0 +1,125 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("../font/manrope-light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../font/manrope-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../font/manrope-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../font/manrope-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  /* Исправлено: корректная адаптация изображений */
+}
+
+/* --- ДОБАВЛЕНО: стиль для ссылки пропуска к основному контенту (доступность) --- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 12px 16px;
+  background-color: var(--fon_dark);
+  color: var(--text_color_fon_dark);
+  z-index: 1000;
+  border-radius: 4px;
+  outline: 3px solid var(--text_color_fon_dark);
+}
+
+/* --- конец добавленного блока --- */
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--fon_light);
+}
+
+.body-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  margin-top: 50px;
+}
+
+:root {
+  --index: calc(1vw + 1vh);
+  --fon_dark: #01001C;
+  --fon_light: #efeff1;
+  --background_card: #f7f9f9;
+  --text_color_fon_light: #100314;
+  --text_color_fon_dark: #fff;
+  --font-h2: 2rem;
+  --subtitle-h3: 32px;
+  --font-h4: 28px;
+  --font-p: 20px;
+  --font-primary: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-weight_title-H2: 700;
+  --font-weight_subtitle-H3: 700;
+  --font-weight_rank-H4: 700;
+  --font-weight_text-P: 500;
+  --font_adapt_title-H2: 36px;
+  --font_adapt_subtitle-H3: 30px;
+  --font_adapt_rank-H4: 24px;
+  --font_adapt_text-P: 16px;
+  --font-weight_adapt_title-H2: 700;
+  --font-weight_adapt_subtitle-H3: 500;
+  --font-weight_adapt_rank-H4: 500;
+  --font-weight_adapt_text-P: 400;
+  --section-top: calc(var(--index) * 1);
+  --width-img: calc(var(--index) * 30);
+  --border-radius: 16px;
+}

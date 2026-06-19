@@ -1,0 +1,63 @@
+.hero-section {
+  background: var(--fon_dark);
+  color: var(--text_color_fon_dark);
+  min-height: 100svh;
+  display: flex;
+}
+
+.hero-section__container {
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  place-content: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(6rem, 18vw, 12rem);
+  text-align: center;
+}
+
+.hero-section__title h1 {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.hero-section__headline {
+  /* Исправлено: строки заголовка вынесены в отдельные блоки вместо <br> */
+  display: block;
+  line-height: 1.2;
+}
+
+.text-hero-section h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
+  font-weight: 700;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.hero-section__subtitle {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hero-section__container {
+    padding-block: clamp(5rem, 30vw, 10rem);
+    gap: clamp(1rem, 6vw, 2.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section__container {
+    gap: clamp(2.5rem, 4vw, 5rem);
+  }
+
+  .hero-section__title h1 {
+    letter-spacing: 0;
+    font-size: clamp(1.35rem, 6vw, 1.75rem);
+  }
+
+  .text-hero-section h2 {
+    font-size: clamp(1rem, 3.5vw, 1.5rem);
+  }
+}
