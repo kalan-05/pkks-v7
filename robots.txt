@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pkks.spb.ru/sitemap.xml
+Host: pkks.spb.ru

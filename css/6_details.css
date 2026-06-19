@@ -1,0 +1,145 @@
+/*.section-six-details {*/
+/*  min-height: 100%;*/
+/*  color: var(--text_color_fon_light);*/
+/*  padding-inline: 3%;*/
+/*}*/
+
+/*.section-six-details__title {*/
+/*  margin: var(--section-top);*/
+/*  font-size: var(--font-h2);*/
+/*  font-weight: var(--font-weight_title-H2);*/
+/*  text-align: center;*/
+/*}*/
+
+/*.section-six-details__content {*/
+/*  margin: 10px auto;*/
+/*  font-size: var(--font-p);*/
+/*  font-weight: var(--font-weight_text-P);*/
+/*  letter-spacing: 1px;*/
+/*  line-height: 1.6;*/
+/*}*/
+
+/*.details-list {*/
+/*  display: grid;*/
+/*  gap: 12px;*/
+/*}*/
+
+/*.details-list__group {*/
+/*  padding: 16px 20px;*/
+/*  background: var(--background_card);*/
+/*  border-radius: var(--border-radius);*/
+/*}*/
+
+/*.details-list__group dt {*/
+/*  font-weight: var(--font-weight_rank-H4);*/
+/*  margin-bottom: 6px;*/
+/*}*/
+
+/*.details-list__group dd {*/
+/*  color: var(--text_color_fon_light);*/
+/*}*/
+
+/*.details-list__link {*/
+/*  text-decoration: underline;*/
+/*}*/
+
+/*@media (max-width: 430px) {*/
+/*  .section-six-details__title h2 {*/
+/*    font-size: var(--font_adapt_title-H2);*/
+/*    font-weight: var(--font-weight_adapt_title-H2);*/
+/*  }*/
+
+/*  .section-six-details__content {*/
+/*    font-size: var(--font_adapt_text-P);*/
+/*    font-weight: var(--font-weight_adapt_text-P);*/
+/*  }*/
+/*}*/
+
+
+.section-six-details {
+  min-height: 100%;
+  color: var(--text_color_fon_light);
+  padding-inline: 3%;
+  /*box-sizing: border-box; !* Добавлен box-sizing для правильных отступов и размера *!*/
+}
+
+.section-six-details__title {
+  margin: var(--section-top);
+  font-size: var(--font-h2);
+  font-weight: var(--font-weight_title-H2);
+  text-align: center;
+}
+
+.section-six-details__content {
+  margin: 10px auto;
+  font-size: var(--font-p);
+  font-weight: var(--font-weight_text-P);
+  /* letter-spacing: 1px; */
+  line-height: 1.6;
+}
+
+.details-list {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  /* Сделать один столбец на маленьких экранах */
+}
+
+.details-list__group {
+  padding: 16px 20px;
+  border: 1px solid #eaeaea;
+  background: var(--background_card);
+  border-radius: var(--border-radius);
+}
+
+.details-list__group dt {
+  font-weight: var(--font-weight_rank-H4);
+  margin-bottom: 6px;
+}
+
+.details-list__group dd {
+  color: var(--text_color_fon_light);
+  margin: 10px 0;
+  line-height: 1.2;
+  font-weight: normal;
+}
+
+.details-list__link {
+  text-decoration: underline;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .section-six-details__content {
+    font-size: 16px;
+    /* Добавлено изменение размера шрифта */
+  }
+
+  .details-list {
+    gap: 8px;
+    /* Уменьшаем промежутки для мобильных устройств */
+  }
+}
+
+@media (max-width: 430px) {
+  .section-six-details__title h2 {
+    font-size: var(--font_adapt_title-H2);
+    font-weight: var(--font-weight_adapt_title-H2);
+  }
+
+  .section-six-details__content {
+    font-size: var(--font_adapt_text-P);
+    font-weight: var(--font-weight_adapt_text-P);
+  }
+
+  .details-list {
+    gap: 6px;
+    /* Уменьшение промежутков между элементами для экрана до 430px */
+  }
+
+  .details-list__group {
+    padding: 12px;
+    /* Уменьшаем отступы в карточках */
+    font-size: 12px;
+  }
+}

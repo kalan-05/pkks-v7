@@ -1,0 +1,42 @@
+:root {
+  --header-offset: clamp(4rem, 12vw, 7rem);
+}
+
+body {
+  margin: 0;
+  color: var(--text_color_fon_light);
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+dt,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+[id^="link"] {
+  scroll-margin-top: var(--header-offset);
+}
+
+a {
+  transition: color .2s ease;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.container:focus-visible,
+section:focus-visible {
+  outline: none;
+}

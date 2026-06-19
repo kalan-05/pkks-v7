@@ -94,3 +94,6 @@ $RECYCLE.BIN/
 .codex_tmp/
 .artifacts/
 reports/tmp/
+
+# Local legacy deploy workflow is not active in this public repo yet
+.github/workflows/publish.yml
