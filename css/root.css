@@ -90,14 +90,21 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--container-max);
+  width: 100%;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 var(--container-padding-desktop);
   margin-top: 50px;
+  box-sizing: border-box;
 }
 
 :root {
   --index: calc(1vw + 1vh);
+  --container-max: 1440px;
+  --container-padding-desktop: 32px;
+  --container-padding-tablet: 24px;
+  --container-padding-mobile: 16px;
+  --text-max: 1080px;
   --fon_dark: #01001C;
   --fon_light: #efeff1;
   --background_card: #f7f9f9;
@@ -123,4 +130,18 @@ body {
   --section-top: calc(var(--index) * 1);
   --width-img: calc(var(--index) * 30);
   --border-radius: 16px;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding-left: var(--container-padding-tablet);
+    padding-right: var(--container-padding-tablet);
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: var(--container-padding-mobile);
+    padding-right: var(--container-padding-mobile);
+  }
 }

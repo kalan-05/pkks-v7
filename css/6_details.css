@@ -59,7 +59,6 @@
 .section-six-details {
   min-height: 100%;
   color: var(--text_color_fon_light);
-  padding-inline: 3%;
   /*box-sizing: border-box; !* Добавлен box-sizing для правильных отступов и размера *!*/
 }
 
@@ -71,6 +70,7 @@
 }
 
 .section-six-details__content {
+  max-width: var(--text-max);
   margin: 10px auto;
   font-size: var(--font-p);
   font-weight: var(--font-weight_text-P);

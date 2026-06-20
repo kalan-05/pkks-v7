@@ -7,7 +7,7 @@
   height: 100%;
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
-  padding: 0 4%;
+  padding-block: 0;
 }
 
 .title {
@@ -21,7 +21,8 @@
   font-size: var(--font-p);
   font-weight: 400;
   line-height: 1.7;
-  margin-left: calc(var(--index) * 1);
+  max-width: var(--text-max);
+  margin-inline: auto;
 }
 
 @media screen and (max-width: 900px) {

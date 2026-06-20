@@ -47,14 +47,14 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .hero-section__container {
     gap: clamp(2.5rem, 4vw, 5rem);
   }
 
   .hero-section__title h1 {
     letter-spacing: 0;
-    font-size: clamp(1.35rem, 6vw, 1.75rem);
+    font-size: clamp(1.35rem, 6vw, 1.5rem);
   }
 
   .text-hero-section h2 {

@@ -123,14 +123,14 @@
 .sectionEight-copyright {
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
-  padding-inline: 3%;
 }
 
 .content_copyright {
   font-size: 16px;
   font-weight: 100;
   text-align: center;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   line-height: 30px;
 }
 

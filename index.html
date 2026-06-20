@@ -35,7 +35,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/nav.css?v=006d2">
   <link rel="stylesheet" href="css/root.css">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/1_hero-section.css">
@@ -92,7 +92,7 @@
 
   <!-- JS (defer) -->
   <script defer src="js/menu.js"></script>
-  <script defer src="js/header.js"></script>
+  <script defer src="js/header.js?v=006d2"></script>
 </head>
 
 <body>
@@ -104,10 +104,6 @@
         <a href="./" class="logo">
           <h2>НАМ ДОВЕРЯЮТ</h2>
         </a>
-        <button class="header__burger-btn" id="burger" aria-controls="menu" aria-expanded="false"
-          aria-label="Переключить меню">
-          <span></span><span></span><span></span>
-        </button>
         <nav class="menu" id="menu" aria-label="Основная навигация">
           <ul class="menu__list">
             <li class="menu__item">
@@ -130,16 +126,21 @@
               <a class="menu__link" href="#link5">КОНТАКТЫ
               </a>
             </li>
-            <li class="menu__icon">
-              <a href="tel:+78124302884">
-                <span>
-                  <img src="img/phone.svg" title="Позвонить по телефону" alt="Телефон юридической конторы" width="40"
-                    height="35">
-                </span>
+            <li class="menu__item menu__item--phone">
+              <a class="menu__link menu__phone-link" href="tel:+78124302884">
+                +7 (812) 430-28-84
               </a>
             </li>
           </ul>
         </nav>
+        <a class="header__phone" href="tel:+78124302884"
+          aria-label="Позвонить в правовую контору К. Сопрачева">
+          +7 (812) 430-28-84
+        </a>
+        <button class="header__burger-btn" id="burger" aria-controls="menu" aria-expanded="false"
+          aria-label="Переключить меню">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </header>
 
