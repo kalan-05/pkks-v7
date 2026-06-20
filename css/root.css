@@ -1,6 +1,7 @@
+/* Полные self-hosted файлы Manrope с кириллицей. */
 @font-face {
   font-family: "Manrope";
-  src: url("../font/manrope-light.woff2") format("woff2");
+  src: url("../font/manrope-cyrillic-light.woff2") format("woff2");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -8,7 +9,7 @@
 
 @font-face {
   font-family: "Manrope";
-  src: url("../font/manrope-regular.woff2") format("woff2");
+  src: url("../font/manrope-cyrillic-regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -16,7 +17,7 @@
 
 @font-face {
   font-family: "Manrope";
-  src: url("../font/manrope-medium.woff2") format("woff2");
+  src: url("../font/manrope-cyrillic-medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -24,7 +25,7 @@
 
 @font-face {
   font-family: "Manrope";
-  src: url("../font/manrope-bold.woff2") format("woff2");
+  src: url("../font/manrope-cyrillic-bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
