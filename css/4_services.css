@@ -1,138 +1,147 @@
+.section-four-services {
+  margin-top: 0;
+  padding-top: clamp(42px, 5vw, 72px);
+  padding-bottom: clamp(54px, 6vw, 88px);
+}
+
 .services__title {
-  margin: var(--section-top);
+  margin: 0 0 clamp(18px, 3vw, 28px);
   font-size: var(--font-h2);
   font-weight: var(--font-weight_title-H2);
   text-align: center;
   color: var(--text_color_fon_light);
 }
 
+.services__title h2 {
+  margin: 0;
+}
+
+.services__lead {
+  max-width: 820px;
+  margin: 0 auto clamp(34px, 4vw, 56px);
+  color: rgba(16, 3, 20, 0.72);
+  font-size: var(--font-p);
+  font-weight: var(--font-weight_text-P);
+  line-height: 1.6;
+  text-align: center;
+}
+
 .section-four-services__row {
-  display: flex;
-  align-content: flex-start;
-  justify-content: center;
-  gap: 64px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
 }
 
 .section-four-services__column {
-  width: 48%;
+  min-width: 0;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .name__services {
+  min-height: clamp(112px, 7vw, 118px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
   color: var(--text_color_fon_light);
   font-size: var(--subtitle-h3);
   font-weight: var(--font-weight_subtitle-H3);
+  line-height: 1.15;
   text-align: center;
+}
+
+.name__services h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
 }
 
 .section-four-box {
   background-color: #ffffff;
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(16, 3, 20, 0.10);
   border-radius: var(--border-radius);
-  padding: 30px 30px 20px 30px;
-  margin: 10px 0;
+  padding: clamp(22px, 2.5vw, 30px);
+  margin: 0;
 }
 
 .title__services {
-  /* margin: 40px 0 40px 0; */
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin: 0 0 16px;
   color: var(--text_color_fon_light);
-  font-size: var(--font-h4);
+  text-align: left;
+}
+
+.title__services h4 {
+  margin: 0;
+  font-size: clamp(20px, 1.8vw, 24px);
   font-weight: var(--font-weight_rank-H4);
-  /* letter-spacing: 1px; */
-  text-align: center;
-}
-
-.name__services_two {
-  margin-bottom: 170px;
-}
-
-@media (max-width: 1895px) {
-  .name__services_two {
-    margin-bottom: 130px;
-  }
-}
-
-@media (max-width: 1155px) {
-  .name__services_two {
-    margin-bottom: 170px;
-  }
+  line-height: 1.3;
 }
 
 .content__list {
-  color: var(--text_color_fon_light);
-  font-size: var(--font-p);
-  /* font-weight: var(--font-weight_text-P); */
-  line-height: 1.5;
-}
-
-.content__list li::marker {
-  font-size: var(--font-p);
-  color: #5c4d4d;
-}
-
-.title__services {
+  margin: 0;
+  padding-left: 22px;
   color: var(--text_color_fon_light);
   font-size: var(--font-p);
   font-weight: var(--font-weight_text-P);
-  /* letter-spacing: 1px; */
+  line-height: 1.6;
+}
+
+.content__list li + li {
+  margin-top: 6px;
+}
+
+.content__list li::marker {
+  font-size: 0.9em;
+  color: rgba(16, 3, 20, 0.55);
 }
 
 @media (max-width: 1031px) {
   .section-four-services__row {
-    flex-direction: column;
-    gap: 0;
+    grid-template-columns: 1fr;
+    gap: clamp(28px, 5vw, 44px);
   }
 
-  .section-four-services__column {
-    width: 100%;
+  .name__services {
+    min-height: auto;
+    margin-bottom: 4px;
   }
-
-  .name__services_two {
-    margin: 40px 0 20px 0;
-  }
-
-  .name__services_one h3 {
-    margin-top: 0;
-  }
-
-  .name__services h3 {
-    margin-bottom: 0px;
-  }
-
-  .title__services2 {
-    margin-top: 0;
-  }
-
-  /* .content__list {
-    padding-left: 210px;
-  } */
-}
-
-@media (max-width: 769px) {
-  /* .content__list {
-    padding-left: 40px;
-  } */
 }
 
 @media (max-width: 430px) {
+  .section-four-services {
+    padding-top: 36px;
+    padding-bottom: 52px;
+  }
+
   .services__title h2 {
     font-size: var(--font_adapt_title-H2);
     font-weight: var(--font-weight_adapt_title-H2);
   }
 
+  .services__lead {
+    font-size: var(--font_adapt_text-P);
+    font-weight: var(--font-weight_adapt_text-P);
+  }
+
   .name__services h3 {
-    font-size: var(--font_adapt_subtitle-H3);
+    font-size: 24px;
     font-weight: var(--font-weight_adapt_subtitle-H3);
+    line-height: 1.18;
   }
 
   .title__services h4 {
-    font-size: var(--font_adapt_rank-H4);
+    font-size: 20px;
     font-weight: var(--font-weight_rank-H4);
+    line-height: 1.25;
+    overflow-wrap: anywhere;
   }
 
-  /* .content__list {
+  .content__list {
     font-size: var(--font_adapt_text-P);
     font-weight: var(--font-weight_adapt_text-P);
-  } */
+  }
 }
