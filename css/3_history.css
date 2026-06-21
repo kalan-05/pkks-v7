@@ -7,11 +7,21 @@
   height: 100%;
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
-  padding-block: 0 50px;
+  padding-block: 0 clamp(34px, 4vw, 56px);
+}
+
+.section-three-history + .section-four-services {
+  margin-top: 0;
+}
+
+.section-three-history__container {
+  margin-top: 0;
+  padding-top: clamp(42px, 5vw, 72px);
+  padding-bottom: 0;
 }
 
 .section-three-history .title {
-  margin: var(--section-top);
+  margin: 0 0 clamp(28px, 4vw, 42px);
   text-align: center;
   font-size: var(--font-h2);
   font-weight: var(--font-weight_title-H2);
@@ -68,11 +78,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   max-width: var(--text-max);
-  margin: 0 auto 48px;
+  margin: 0 auto 56px;
   padding: 0;
 }
 
-.history-facts,
 .history-facts dt,
 .history-facts dd {
   margin: 0;
@@ -107,8 +116,8 @@
   font-size: var(--font-p);
   font-weight: 400;
   line-height: 1.65;
-  max-width: var(--text-max);
-  margin-inline: auto;
+  max-width: 920px;
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 900px) {
@@ -137,7 +146,7 @@
   display: grid;
   grid-template-columns: minmax(90px, 120px) minmax(0, 1fr);
   gap: 24px;
-  padding: 0 0 26px 28px;
+  padding: 0 0 30px 34px;
 }
 
 .timeline-box .timeline-content:last-child {
@@ -147,12 +156,12 @@
 .timeline-box .timeline-content::before {
   content: '';
   position: absolute;
-  top: 6px;
-  left: -8px;
-  width: 14px;
-  height: 14px;
+  top: 8px;
+  left: -11px;
+  width: 20px;
+  height: 20px;
   background: #F4F5F8;
-  border: 2px solid var(--fon_dark);
+  border: 4px solid var(--fon_dark);
   border-radius: 50%;
 }
 
@@ -177,11 +186,6 @@
   box-shadow: none;
 }
 
-.timeline-content--accent .content {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(244, 245, 248, 0.32);
-}
-
 .timeline-content .content h3 {
   margin: 0 0 10px;
   color: rgba(255, 255, 255, 0.92);
@@ -201,6 +205,14 @@
 @media (max-width: 576px) {
   .section-three-history {
     padding-bottom: 36px;
+  }
+
+  .section-three-history__container {
+    padding-top: 36px;
+  }
+
+  .section-three-history .title {
+    margin-bottom: 24px;
   }
 
   .section-three-history__lead {
@@ -227,7 +239,7 @@
 
   .history-facts {
     grid-template-columns: 1fr;
-    margin-bottom: 30px;
+    margin-bottom: 36px;
   }
 
   .history-facts__item {
@@ -245,7 +257,13 @@
   .timeline-box .timeline-content {
     grid-template-columns: 1fr;
     gap: 10px;
-    padding-left: 22px;
+    padding-left: 28px;
+  }
+
+  .timeline-box .timeline-content::before {
+    left: -10px;
+    width: 18px;
+    height: 18px;
   }
 
   .timeline-content time {
