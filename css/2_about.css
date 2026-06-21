@@ -1,3 +1,26 @@
+.site-light-overlap {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  margin-top: -82svh;
+  padding-top: clamp(3.5rem, 8vw, 6rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+  background: var(--fon_light);
+  color: var(--text_color_fon_light);
+  border-radius: 0;
+  box-shadow: 0 -28px 80px rgba(1, 0, 28, 0.22);
+  isolation: isolate;
+}
+
+.site-light-overlap .section-second-about.container {
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
 .section-second__title {
   margin: var(--section-top);
   text-align: center;
@@ -361,5 +384,13 @@
   .section-second__kirill-photo img {
     margin-top: 20px;
     margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .site-light-overlap {
+    margin-top: -59svh;
+    padding-top: clamp(2.5rem, 12vw, 4rem);
+    border-radius: 0;
   }
 }

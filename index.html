@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="css/nav.css?v=006d2">
   <link rel="stylesheet" href="css/root.css">
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/1_hero-section.css">
-  <link rel="stylesheet" href="css/2_about.css">
+  <link rel="stylesheet" href="css/1_hero-section.css?v=008g">
+  <link rel="stylesheet" href="css/2_about.css?v=008g">
   <link rel="stylesheet" href="css/3_history.css">
   <link rel="stylesheet" href="css/4_services.css">
   <link rel="stylesheet" href="css/5_price.css">
@@ -93,6 +93,7 @@
   <!-- JS (defer) -->
   <script defer src="js/menu.js"></script>
   <script defer src="js/header.js?v=006d2"></script>
+  <script defer src="js/hero-parallax.js?v=008g"></script>
 </head>
 
 <body>
@@ -145,24 +146,29 @@
     </header>
 
     <main id="main-content" tabindex="-1">
-      <section class="hero-section">
-        <div class="hero-section__container container">
-          <div class="hero-section__title">
-            <h1>
-              <span class="hero-section__headline">ПРАВОВАЯ КОНТОРА</span>
-              <span class="hero-section__headline">К.СОПРАЧЕВА</span>
-            </h1>
+      <div class="hero-parallax-scene" data-hero-parallax-scene>
+        <section class="hero-section" data-hero-sticky>
+          <div class="hero-section__container container">
+            <div class="hero-section__content" data-hero-depth>
+              <div class="hero-section__title">
+                <h1>
+                  <span class="hero-section__headline">ПРАВОВАЯ КОНТОРА</span>
+                  <span class="hero-section__headline">К.СОПРАЧЕВА</span>
+                </h1>
+              </div>
+              <div class="text-hero-section">
+                <h2>
+                  <span class="hero-section__subtitle">НАШИ УСЛУГИ ПОСТОЯННЫ,</span>
+                  <span class="hero-section__subtitle">ПОТОМУ ЧТО НАДЕЖНЫ</span>
+                </h2>
+              </div>
+            </div>
           </div>
-          <div class="text-hero-section">
-            <h2>
-              <span class="hero-section__subtitle">НАШИ УСЛУГИ ПОСТОЯННЫ,</span>
-              <span class="hero-section__subtitle">ПОТОМУ ЧТО НАДЕЖНЫ</span>
-            </h2>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      <section class="section-second-about container">
+      <div class="site-light-overlap" data-site-light-overlap>
+        <section class="section-second-about container" data-about-overlap>
         <div class="section-second__title">
           <h2 id="link1">О НАС</h2>
         </div>
@@ -527,6 +533,7 @@
         <iframe class="map__frame" title="Расположение офиса на карте"
           src="https://yandex.ru/map-widget/v1/?um=constructor%3A54fa3fe17907d2a196ee2274f9720cd2dffe68a883ce18ccc644e6d43e6744dd&amp;source=constructor"
           width="100%" height="500" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
       </div>
     </main>
 

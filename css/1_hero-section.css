@@ -1,11 +1,38 @@
+html,
+body {
+  overflow-x: clip;
+}
+
+.body-wrapper {
+  overflow: visible;
+  width: 100%;
+  position: relative;
+}
+
+.hero-parallax-scene {
+  position: relative;
+  z-index: 1;
+  min-height: 190svh;
+  background: var(--fon_dark);
+  isolation: isolate;
+}
+
 .hero-section {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   background: var(--fon_dark);
   color: var(--text_color_fon_dark);
   min-height: 100svh;
+  height: 100svh;
+  overflow: hidden;
   display: flex;
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 .hero-section__container {
+  min-height: 100svh;
   margin: 0 auto;
   width: 100%;
   display: grid;
@@ -15,11 +42,54 @@
   text-align: center;
 }
 
+.hero-section__content {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.hero-section__content[data-hero-depth] {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: opacity, filter;
+}
+
+.hero-section__content[data-hero-depth] .hero-section__title,
+.hero-section__content[data-hero-depth] .text-hero-section {
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  opacity: var(--hero-depth-opacity, 1);
+  filter: blur(var(--hero-depth-blur, 0px));
+}
+
+.hero-section__content[data-hero-depth] .hero-section__title {
+  transform:
+    translate3d(0, var(--hero-title-y, 0px), 0)
+    scale(var(--hero-title-scale, 1));
+}
+
+.hero-section__content[data-hero-depth] .text-hero-section {
+  transform:
+    translate3d(0, var(--hero-subtitle-y, 0px), 0)
+    scale(var(--hero-subtitle-scale, 1));
+}
+
 .hero-section__title h1 {
   font-size: clamp(2.75rem, 6vw, 5rem);
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
+}
+
+.hero-section__title h1,
+.text-hero-section h2 {
+  transform-origin: center center;
+  backface-visibility: hidden;
 }
 
 .hero-section__headline {
@@ -48,6 +118,10 @@
 }
 
 @media (max-width: 576px) {
+  .hero-parallax-scene {
+    min-height: 175svh;
+  }
+
   .hero-section__container {
     gap: clamp(2.5rem, 4vw, 5rem);
   }
@@ -59,5 +133,16 @@
 
   .text-hero-section h2 {
     font-size: clamp(1rem, 3.5vw, 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-section__content[data-hero-depth] .hero-section__title,
+  .hero-section__content[data-hero-depth] .text-hero-section,
+  .hero-section__title h1,
+  .text-hero-section h2 {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
 }
