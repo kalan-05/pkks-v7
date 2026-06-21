@@ -1,0 +1,73 @@
+{
+  "projectName": "pkks-V7",
+  "projectType": "static-site",
+  "reportDir": ".codex_tmp/agent-reports",
+  "artifactDir": ".codex_tmp/agent-artifacts",
+  "protectedZones": [
+    "index.html",
+    "css",
+    "js",
+    "img",
+    "font"
+  ],
+  "checks": {
+    "gitStatus": true,
+    "diffCheck": true,
+    "securityAudit": true,
+    "dependencyAudit": false,
+    "cleanAudit": true,
+    "cleanApplySafe": false,
+    "optimizeAudit": true,
+    "seo": false,
+    "brokenLinks": false
+  },
+  "commands": {
+    "preview": "py -m http.server 4177 --bind 127.0.0.1"
+  },
+  "tasks": {
+    "pkks-v7-global-quality": {
+      "localUrl": "http://127.0.0.1:4177/",
+      "allowedZones": [
+        "index.html",
+        "css/*.css"
+      ],
+      "forbiddenZones": [
+        "js/**",
+        "img/**",
+        "font/**",
+        "README.md",
+        "package.json",
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        "yarn.lock"
+      ]
+    }
+  },
+  "cleanup": {
+    "enabled": true,
+    "safeApply": false,
+    "autoDeleteTempFiles": false,
+    "autoDeleteUnusedAssets": false
+  },
+  "optimization": {
+    "enabled": true,
+    "warnOnDuplicateAssets": true
+  },
+  "entrypoint": "index.html",
+  "packageManager": "none",
+  "build": "none",
+  "test": "none",
+  "preview": {
+    "type": "static-http-server",
+    "command": "py -m http.server 4177 --bind 127.0.0.1",
+    "fallbackCommand": "python -m http.server 4177 --bind 127.0.0.1",
+    "url": "http://127.0.0.1:4177/"
+  },
+  "auditDir": ".codex_tmp/audits",
+  "cssDir": "css",
+  "jsDir": "js",
+  "assetDirs": [
+    "img",
+    "font"
+  ]
+}
