@@ -36,8 +36,12 @@
   align-items: flex-start;
   min-width: 100%;
   min-height: 90%;
-  margin-bottom: 150px;
-  gap: 45px;
+  margin-bottom: clamp(56px, 8vw, 96px);
+  gap: clamp(24px, 4vw, 52px);
+}
+
+.section-second-about > .section-second__container:last-of-type {
+  margin-bottom: 0;
 }
 
 .section-second__konstantin_rank,
@@ -108,7 +112,8 @@
 .section-second__konstantin_photo img,
 .section-second__kirill-photo img,
 .section-second__img-lebedev img {
-  border-radius: 15px;
+  display: block;
+  border-radius: var(--border-radius);
 }
 
 .section-second__konstantin_rank,
@@ -128,7 +133,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 55%;
-  gap: 45px;
+  gap: clamp(22px, 3vw, 38px);
 }
 
 .section-second__konstantin_surname,
@@ -149,7 +154,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 35px;
+  gap: clamp(14px, 2vw, 22px);
 }
 
 .konstantin_card_1,
@@ -159,13 +164,14 @@
 .lebedev_card_1 {
   /* width: 90%; */
   border-radius: var(--border-radius);
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(16, 3, 20, 0.10);
   text-align: left;
-  background-color: var(--background_card);
-  padding: 20px 30px;
+  background-color: #ffffff;
+  padding: clamp(20px, 2.5vw, 30px);
   color: var(--text_color_fon_light);
   font-size: var(--font-p);
   font-weight: var(--font-weight_text-P);
+  line-height: 1.55;
 }
 
 .section-second__container_kirill-left {
@@ -174,7 +180,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 55%;
-  gap: 45px;
+  gap: clamp(22px, 3vw, 38px);
 }
 
 .kirill_card {
@@ -332,9 +338,8 @@
   .section-second__title_kirill-surname h3 {
     font-size: var(--font_adapt_subtitle-H3);
     /* font-weight: var(--font-weight_adapt_subtitle-H3); */
-    letter-spacing: 2px;
-    line-height: 1;
-    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: 0;
   }
 
   .section-second__konstantin_card {
@@ -348,9 +353,10 @@
   .section-second__kirill_card {
     width: 100%;
     margin: 0 auto;
-    padding: 25px 25px 25px 35px;
+    padding: 18px;
     font-size: var(--font_adapt_text-P);
     font-weight: var(--font-weight_adapt_text-P);
+    line-height: 1.55;
   }
 
   .kirill_card {
@@ -372,15 +378,6 @@
 }
 
 @media (max-width: 391px) {
-
-  .konstantin_card_1,
-  .konstantin_card_2,
-  .konstantin_card_3,
-  .lebedev_card_1,
-  .section-second__kirill_card {
-    padding: 15px 35px;
-  }
-
   .section-second__kirill-photo img {
     margin-top: 20px;
     margin-bottom: 5px;
