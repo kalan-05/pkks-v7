@@ -44,7 +44,7 @@
   <link rel="stylesheet" href="css/4_services.css?v=010a">
   <link rel="stylesheet" href="css/5_price.css?v=012a">
   <link rel="stylesheet" href="css/6_details.css">
-  <link rel="stylesheet" href="css/7_contacts.css">
+  <link rel="stylesheet" href="css/7_contacts.css?v=013a-r4">
 
   <!-- Fonts Preload -->
   <link rel="preload" href="./font/manrope-cyrillic-regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -529,48 +529,55 @@
       </section>
 
       <section class="section-seven-contacts">
-        <div class="payment">
-          <a href="https://qr.nspk.ru/AS1A00195VHK73QD8I4P480TGSC0GKCR?type=01&bank=100000000111&crc=AAE7"
-            target="_blank" rel="noopener noreferrer">
-            <span class="button-image">
+        <div class="contacts-payment">
+          <div class="contacts-payment__container container">
+            <h2 class="contacts-payment__title">ОПЛАТА УСЛУГ</h2>
+
+            <a class="contacts-payment__button"
+              href="https://qr.nspk.ru/AS1A00195VHK73QD8I4P480TGSC0GKCR?type=01&bank=100000000111&crc=AAE7"
+              target="_blank" rel="noopener noreferrer">
               <img src="img/battonprice.webp" title="Здесь можно оплатить" alt="Здесь можно оплатить" loading="lazy"
                 decoding="async" width="268" height="268">
-            </span>
-          </a>
-          <div class="contact">
-            <div class="contact-title">
-              <h2 id="link5">КОНТАКТЫ</h2>
-            </div>
+            </a>
           </div>
         </div>
 
-        <div class="contact-row container">
-          <div class="contact-column">
-            <div class="contacts-content">
-              <a class="address" href="https://dev.polymap.ru/pkks" target="_blank" rel="noopener noreferrer">АДРЕС
-              </a>
-              <ul class="contacts-list">
-                <li>197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</li>
-                <li>
-                  <span class="contacts-list__label">Телефон:</span>
-                  <a class="phone" href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84
-                  </a>
-                  (многоканальный)
-                </li>
-                <li>
-                  <span class="contacts-list__label">E-mail:</span>
-                  <a class="phone" href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru
-                  </a>
-                </li>
-              </ul>
+        <div class="contacts-panel">
+          <div class="contacts-panel__container container">
+            <div class="contact-title">
+              <h2 id="link5">КОНТАКТЫ</h2>
             </div>
-          </div>
-          <div class="imgEntrance">
-            <a href="https://dev.polymap.ru/pkks" target="_blank" rel="noopener noreferrer">
-              <img src="img/offic.webp" title="Офис ООО “Правовая контора К. Сопрачева”"
-                alt="Вход ООО “Правовая контора К. Сопрачева”" loading="lazy" decoding="async" width="1350"
-                height="1060">
-            </a>
+
+            <div class="contact-row">
+              <div class="contact-column">
+                <div class="contacts-content">
+                  <a class="address" href="https://dev.polymap.ru/pkks" target="_blank"
+                    rel="noopener noreferrer">АДРЕС
+                  </a>
+                  <ul class="contacts-list">
+                    <li>197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</li>
+                    <li>
+                      <span class="contacts-list__label">Телефон:</span>
+                      <a class="phone" href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84
+                      </a>
+                      (многоканальный)
+                    </li>
+                    <li>
+                      <span class="contacts-list__label">E-mail:</span>
+                      <a class="phone" href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="imgEntrance">
+                <a href="https://dev.polymap.ru/pkks" target="_blank" rel="noopener noreferrer">
+                  <img src="img/offic.webp" title="Офис ООО “Правовая контора К. Сопрачева”"
+                    alt="Вход ООО “Правовая контора К. Сопрачева”" loading="lazy" decoding="async" width="1350"
+                    height="1060">
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
