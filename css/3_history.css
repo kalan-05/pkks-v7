@@ -7,7 +7,7 @@
   height: 100%;
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
-  padding-block: 0 clamp(34px, 4vw, 56px);
+  padding-block: var(--pkks-history-top) var(--pkks-history-bottom);
 }
 
 .section-three-history + .section-four-services {
@@ -16,12 +16,12 @@
 
 .section-three-history__container {
   margin-top: 0;
-  padding-top: clamp(42px, 5vw, 72px);
+  padding-top: 0;
   padding-bottom: 0;
 }
 
 .section-three-history .title {
-  margin: 0 0 clamp(28px, 4vw, 42px);
+  margin: 0 0 var(--pkks-title-to-content);
   text-align: center;
   font-size: var(--font-h2);
   font-weight: var(--font-weight_title-H2);
@@ -29,7 +29,7 @@
 
 .section-three-history__lead {
   max-width: var(--text-max);
-  margin: 0 auto 32px;
+  margin: 0 auto var(--pkks-content-stack-gap);
   color: rgba(255, 255, 255, 0.78);
   font-size: var(--font-p);
   font-weight: var(--font-weight_text-P);
@@ -204,19 +204,19 @@
 
 @media (max-width: 576px) {
   .section-three-history {
-    padding-bottom: 36px;
+    padding-block: var(--pkks-history-top) var(--pkks-history-bottom);
   }
 
   .section-three-history__container {
-    padding-top: 36px;
+    padding-top: 0;
   }
 
   .section-three-history .title {
-    margin-bottom: 24px;
+    margin-bottom: var(--pkks-title-to-content);
   }
 
   .section-three-history__lead {
-    margin-bottom: 24px;
+    margin-bottom: var(--pkks-content-stack-gap);
     font-size: var(--font_adapt_text-P);
     font-weight: var(--font-weight_adapt_text-P);
     line-height: 1.6;

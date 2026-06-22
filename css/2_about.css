@@ -3,8 +3,8 @@
   z-index: 5;
   width: 100%;
   margin-top: -82svh;
-  padding-top: clamp(3.5rem, 8vw, 6rem);
-  padding-bottom: clamp(4rem, 8vw, 7rem);
+  padding-top: 0;
+  padding-bottom: 0;
   background: var(--fon_light);
   color: var(--text_color_fon_light);
   border-radius: 0;
@@ -19,10 +19,12 @@
   background: transparent;
   box-shadow: none;
   border-radius: 0;
+  padding-top: clamp(32px, 3.6vw, 48px);
+  padding-bottom: var(--pkks-about-bottom);
 }
 
 .section-second__title {
-  margin: var(--section-top);
+  margin: 0 0 var(--pkks-title-to-content);
   text-align: center;
   color: var(--text_color_fon_light);
   font-size: var(--font-h2);
@@ -36,7 +38,7 @@
   align-items: flex-start;
   min-width: 100%;
   min-height: 90%;
-  margin-bottom: clamp(56px, 8vw, 96px);
+  margin-bottom: var(--pkks-person-stack-gap);
   gap: clamp(24px, 4vw, 52px);
 }
 
@@ -387,7 +389,8 @@
 @media (max-width: 576px) {
   .site-light-overlap {
     margin-top: -59svh;
-    padding-top: clamp(2.5rem, 12vw, 4rem);
+    padding-top: 0;
+    padding-bottom: 0;
     border-radius: 0;
   }
 }

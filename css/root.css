@@ -94,7 +94,7 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 0 var(--container-padding-desktop);
-  margin-top: 50px;
+  margin-top: 0;
   box-sizing: border-box;
 }
 
@@ -128,8 +128,59 @@ body {
   --font-weight_adapt_rank-H4: 500;
   --font-weight_adapt_text-P: 400;
   --section-top: calc(var(--index) * 1);
+  --pkks-section-start: clamp(44px, 5vw, 72px);
+  --pkks-section-start-compact: clamp(30px, 3.8vw, 52px);
+  --pkks-section-end: clamp(44px, 5vw, 72px);
+  --pkks-title-to-content: clamp(18px, 2.2vw, 30px);
+  --pkks-title-to-content-compact: clamp(14px, 1.8vw, 22px);
+  --pkks-content-stack-gap: clamp(18px, 2.4vw, 32px);
+  --pkks-card-stack-gap: clamp(14px, 2vw, 24px);
+  --pkks-person-stack-gap: clamp(36px, 5vw, 64px);
+  --pkks-about-top: clamp(52px, 5vw, 72px);
+  --pkks-about-bottom: clamp(32px, 3.2vw, 48px);
+  --pkks-history-top: clamp(32px, 3.2vw, 48px);
+  --pkks-history-bottom: clamp(36px, 3.8vw, 56px);
+  --pkks-services-top: clamp(32px, 3.2vw, 48px);
+  --pkks-services-price-gap: clamp(40px, 3.8vw, 56px);
+  --pkks-price-details-gap: clamp(40px, 3.8vw, 56px);
+  --pkks-details-payment-gap: clamp(36px, 3.6vw, 52px);
+  --pkks-payment-button-size: clamp(150px, 14vw, 190px);
+  --pkks-payment-contact-clearance: 24px;
+  --pkks-map-start: clamp(28px, 3.5vw, 48px);
+  --pkks-footer-start: clamp(30px, 3.2vw, 44px);
   --width-img: calc(var(--index) * 30);
   --border-radius: 16px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --pkks-section-start: clamp(28px, 8vw, 42px);
+    --pkks-section-start-compact: clamp(22px, 6vw, 34px);
+    --pkks-section-end: clamp(28px, 8vw, 42px);
+    --pkks-title-to-content: clamp(14px, 4vw, 22px);
+    --pkks-title-to-content-compact: clamp(12px, 3.5vw, 18px);
+    --pkks-content-stack-gap: clamp(14px, 4vw, 24px);
+    --pkks-card-stack-gap: clamp(12px, 3.5vw, 20px);
+    --pkks-person-stack-gap: clamp(28px, 7vw, 42px);
+    --pkks-about-top: clamp(32px, 10vw, 42px);
+    --pkks-about-bottom: clamp(24px, 7vw, 36px);
+    --pkks-history-top: clamp(24px, 7vw, 34px);
+    --pkks-history-bottom: clamp(24px, 7vw, 36px);
+    --pkks-services-top: clamp(22px, 7vw, 34px);
+    --pkks-services-price-gap: clamp(28px, 7vw, 40px);
+    --pkks-price-details-gap: clamp(28px, 7vw, 40px);
+    --pkks-details-payment-gap: clamp(24px, 7vw, 36px);
+    --pkks-payment-button-size: clamp(140px, 42vw, 190px);
+    --pkks-payment-contact-clearance: 18px;
+    --pkks-map-start: clamp(24px, 7vw, 34px);
+    --pkks-footer-start: clamp(24px, 7vw, 34px);
+  }
+}
+
+@media (max-width: 431px) {
+  :root {
+    --pkks-payment-button-size: clamp(132px, 42vw, 170px);
+  }
 }
 
 @media (max-width: 1024px) {

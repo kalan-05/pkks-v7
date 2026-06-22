@@ -1,19 +1,16 @@
 .section-seven-contacts {
-  --payment-button-size: clamp(150px, 14vw, 190px);
+  --payment-button-size: var(--pkks-payment-button-size);
+  --payment-button-reserved-space: calc(var(--pkks-payment-button-size) / 2);
   --payment-button-overlap: 50%;
   position: relative;
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
 }
 
-.site-light-overlap {
-  padding-bottom: 0;
-}
-
 .contacts-payment {
   position: relative;
   background-color: var(--fon_light);
-  padding: clamp(42px, 5vw, 68px) 0 clamp(92px, 7vw, 112px);
+  padding: var(--pkks-details-payment-gap) 0 var(--payment-button-reserved-space);
   z-index: 2;
 }
 
@@ -24,7 +21,7 @@
 }
 
 .contacts-payment__title {
-  margin: 0 0 clamp(24px, 4vw, 36px);
+  margin: 0 0 var(--pkks-title-to-content-compact);
   color: var(--text_color_fon_light);
   font-size: var(--font-h2);
   font-weight: var(--font-weight_title-H2);
@@ -61,7 +58,7 @@
   z-index: 1;
   background-color: var(--fon_dark);
   color: var(--text_color_fon_dark);
-  padding: clamp(82px, 8vw, 118px) 0 clamp(44px, 6vw, 78px);
+  padding: calc(var(--payment-button-reserved-space) + var(--pkks-payment-contact-clearance)) 0 clamp(36px, 4vw, 52px);
 }
 
 .contacts-panel__container {
@@ -69,7 +66,7 @@
 }
 
 .contact-title {
-  margin: 0 0 clamp(28px, 4vw, 48px);
+  margin: 0 0 var(--pkks-title-to-content);
   font-size: var(--font-h2);
   font-weight: var(--font-weight_title-H2);
   text-align: center;
@@ -172,7 +169,7 @@
 .map {
   margin-top: 0;
   background-color: var(--fon_light);
-  padding: clamp(28px, 4vw, 52px) var(--container-padding-desktop) clamp(24px, 3.5vw, 44px);
+  padding: var(--pkks-map-start) var(--container-padding-desktop) 0;
 }
 
 .map.container {
@@ -198,7 +195,7 @@
 
 .site-footer__container {
   margin-top: 0;
-  padding-top: clamp(30px, 4vw, 48px);
+  padding-top: var(--pkks-footer-start);
   padding-bottom: clamp(24px, 3vw, 36px);
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.8fr) minmax(220px, 1fr);
@@ -284,16 +281,8 @@
 }
 
 @media (max-width: 769px) {
-  .section-seven-contacts {
-    --payment-button-size: clamp(140px, 42vw, 190px);
-  }
-
   .contact-row {
     grid-template-columns: 1fr;
-  }
-
-  .contacts-panel {
-    padding-top: 112px;
   }
 
   .contacts-content {
@@ -329,12 +318,7 @@
 
 @media (max-width: 431px) {
   .section-seven-contacts {
-    --payment-button-size: clamp(132px, 42vw, 170px);
     --payment-button-overlap: 50%;
-  }
-
-  .contacts-panel {
-    padding-top: 92px;
   }
 
   .contacts-payment__title,
