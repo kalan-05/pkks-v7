@@ -56,6 +56,16 @@
 /*}*/
 
 
+.section-six-details,
+.section-six-details__content,
+.details-list,
+.details-list__group,
+.details-list__group dd {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 .section-six-details {
   min-height: 100%;
   color: var(--text_color_fon_light);
@@ -70,8 +80,10 @@
 }
 
 .section-six-details__content {
+  width: min(100%, var(--text-max));
   max-width: var(--text-max);
   margin: 10px auto;
+  margin-inline: auto;
   font-size: var(--font-p);
   font-weight: var(--font-weight_text-P);
   /* letter-spacing: 1px; */
@@ -86,9 +98,9 @@
 }
 
 .details-list__group {
-  padding: 16px 20px;
-  border: 1px solid #eaeaea;
-  background: var(--background_card);
+  padding: clamp(20px, 3vw, 30px);
+  background-color: #ffffff;
+  border: 1px solid rgba(16, 3, 20, 0.10);
   border-radius: var(--border-radius);
 }
 
@@ -100,12 +112,16 @@
 .details-list__group dd {
   color: var(--text_color_fon_light);
   margin: 10px 0;
-  line-height: 1.2;
+  line-height: 1.45;
   font-weight: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .details-list__link {
   text-decoration: underline;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 /* Адаптивность для мобильных устройств */
@@ -138,8 +154,19 @@
   }
 
   .details-list__group {
-    padding: 12px;
-    /* Уменьшаем отступы в карточках */
-    font-size: 12px;
+    padding: 18px;
+    font-size: var(--font_adapt_text-P);
+  }
+}
+
+@media (max-width: 360px) {
+  .details-list__group {
+    padding: 16px 14px;
+  }
+}
+
+@media (max-width: 350px) {
+  .details-list__group {
+    padding: 14px 12px;
   }
 }
