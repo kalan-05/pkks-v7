@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+return [
+    'admin_login' => 'change-me',
+    'admin_password_hash' => 'PASTE_PASSWORD_HASH_HERE',
+    'session_idle_timeout' => 1800,
+    'session_absolute_timeout' => 28800,
+    'max_login_attempts' => 5,
+    'login_attempt_window_seconds' => 900,
+    'login_block_seconds' => 900,
+];

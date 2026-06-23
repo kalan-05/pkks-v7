@@ -58,6 +58,13 @@ logs/
 Thumbs.db
 desktop.ini
 
+# Local admin credentials and runtime storage
+/config/admin-auth.php
+/storage/logs/*.log
+/storage/login-attempts.json
+!/storage/logs/
+!/storage/logs/.gitkeep
+
 # IDE and editor files
 .vscode/*
 !.vscode/extensions.json
