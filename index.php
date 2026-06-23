@@ -1,0 +1,441 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/includes/bootstrap.php';
+
+$teamData = pkks_load_json(__DIR__ . '/data/team.json');
+$servicesData = pkks_load_json(__DIR__ . '/data/services.json');
+$pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
+?>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TITLE -->
+  <title>Правовая контора К. Сопрачева — юридические услуги в Санкт-Петербурге</title>
+  <!-- FAVICON -->
+  <link rel="icon" href="img/1Logo.svg">
+
+  <!-- BASIC SEO -->
+  <meta name="description"
+    content="Правовая контора К. Сопрачева — юридическое сопровождение бизнеса и граждан: договоры, представительство в суде, недвижимость, налоговое и трудовое право. Санкт-Петербург. Тел.: +7 (812) 430-28-84">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://pkks.spb.ru/">
+
+  <!-- OPEN GRAPH -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="Правовая контора К. Сопрачева">
+  <meta property="og:title" content="Правовая контора К. Сопрачева — юридические услуги в Санкт-Петербурге">
+  <meta property="og:description"
+    content="Юридическое сопровождение бизнеса и граждан. Договоры, суды, недвижимость, налоги. Санкт-Петербург. Тел.: +7 (812) 430-28-84">
+  <meta property="og:image" content="https://pkks.spb.ru/img/og-cover.png">
+  <meta property="og:url" content="https://pkks.spb.ru/">
+
+  <!-- TWITTER -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Правовая контора К. Сопрачева — юридические услуги в Санкт-Петербурге">
+  <meta name="twitter:description"
+    content="Юридическое сопровождение бизнеса и граждан. Договоры, суды, недвижимость, налоги. Санкт-Петербург. Тел.: +7 (812) 430-28-84">
+  <meta name="twitter:image" content="https://pkks.spb.ru/img/og-cover.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/nav.css?v=006d2">
+  <link rel="stylesheet" href="css/root.css?v=017a-r5">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/1_hero-section.css?v=008g">
+  <link rel="stylesheet" href="css/2_about.css?v=017a-r6">
+  <link rel="stylesheet" href="css/3_history.css?v=017a-r5">
+  <link rel="stylesheet" href="css/4_services.css?v=017a-r5">
+  <link rel="stylesheet" href="css/5_price.css?v=017a-r5">
+  <link rel="stylesheet" href="css/6_details.css?v=017a-r5">
+  <link rel="stylesheet" href="css/7_contacts.css?v=017a-r6">
+
+  <!-- Fonts Preload -->
+  <link rel="preload" href="./font/manrope-cyrillic-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./font/manrope-cyrillic-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./font/manrope-cyrillic-bold.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- PWA/UI -->
+  <meta name="theme-color" content="#101820">
+
+  <!-- JSON-LD: LegalService -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LegalService",
+      "name": "Правовая контора К. Сопрачева",
+      "url": "https://pkks.spb.ru/",
+      "telephone": "+7-812-430-28-84",
+      "email": "soprachev@pkks.spb.ru",
+      "image": "https://pkks.spb.ru/img/og-cover.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Санкт-Петербург",
+        "addressCountry": "RU",
+        "postalCode": "197374",
+        "streetAddress": "ул. Савушкина, д. 115, корп. 1, пом. 24Н"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "10:00",
+        "closes": "18:00"
+      },
+      "priceRange": "₽₽",
+      "sameAs": [
+        "https://dev.polymap.ru/pkks"
+      ]
+    }
+  </script>
+
+  <!-- JS (defer) -->
+  <script defer src="js/menu.js"></script>
+  <script defer src="js/header.js?v=006d2"></script>
+  <script defer src="js/hero-parallax.js?v=008g"></script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Перейти к основному содержанию
+  </a>
+  <div class="body-wrapper">
+    <header id="header" class="header">
+      <div class="container header__container">
+        <a href="./" class="logo">
+          <h2>НАМ ДОВЕРЯЮТ</h2>
+        </a>
+        <nav class="menu" id="menu" aria-label="Основная навигация">
+          <ul class="menu__list">
+            <li class="menu__item">
+              <a class="menu__link active" href="#link1" aria-current="page">О НАС
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__link" href="#link2">УСЛУГИ
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__link" href="#link3">ЦЕНА
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__link" href="#link4">РЕКВИЗИТЫ
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__link" href="#link5">КОНТАКТЫ
+              </a>
+            </li>
+            <li class="menu__item menu__item--phone">
+              <a class="menu__link menu__phone-link" href="tel:+78124302884">
+                +7 (812) 430-28-84
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <a class="header__phone" href="tel:+78124302884"
+          aria-label="Позвонить в правовую контору К. Сопрачева">
+          +7 (812) 430-28-84
+        </a>
+        <button class="header__burger-btn" id="burger" aria-controls="menu" aria-expanded="false"
+          aria-label="Переключить меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <div class="hero-parallax-scene" data-hero-parallax-scene>
+        <section class="hero-section" data-hero-sticky>
+          <div class="hero-section__container container">
+            <div class="hero-section__content" data-hero-depth>
+              <div class="hero-section__title">
+                <h1>
+                  <span class="hero-section__headline">ПРАВОВАЯ КОНТОРА</span>
+                  <span class="hero-section__headline">К.СОПРАЧЕВА</span>
+                </h1>
+              </div>
+              <div class="text-hero-section">
+                <h2>
+                  <span class="hero-section__subtitle">НАШИ УСЛУГИ ПОСТОЯННЫ,</span>
+                  <span class="hero-section__subtitle">ПОТОМУ ЧТО НАДЕЖНЫ</span>
+                </h2>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="site-light-overlap" data-site-light-overlap>
+        <section class="section-second-about container" data-about-overlap>
+        <div class="section-second__title">
+          <h2 id="link1">О НАС</h2>
+        </div>
+
+        <?= pkks_render_team($teamData) ?>
+      </section>
+
+      <section class="section-three-history">
+        <div class="section-three-history__container container">
+          <div class="title">
+            <h2>ИСТОРИЯ</h2>
+          </div>
+          <p class="section-three-history__lead">
+            Более 30 лет юридической практики в Санкт-Петербурге: от юридического кооператива до одной из первых
+            лицензированных правовых контор города.
+          </p>
+
+          <div class="history-license" aria-label="Лицензия №7 от 07.07.94">
+            <div class="history-license__number">№7</div>
+            <div class="history-license__content">
+              <p class="history-license__subtitle">лицензия от 07.07.94</p>
+              <p>В 1994 году Правовая контора К. Сопрачева вошла в число первых десяти юридических фирм
+                Санкт-Петербурга, получивших лицензию Управления юстиции на оказание платных юридических услуг.</p>
+            </div>
+          </div>
+
+          <dl class="history-facts" aria-label="Ключевые исторические факты">
+            <div class="history-facts__item">
+              <dt>1990</dt>
+              <dd>начало юридической практики</dd>
+            </div>
+            <div class="history-facts__item">
+              <dt>№7</dt>
+              <dd>лицензия от 07.07.94</dd>
+            </div>
+            <div class="history-facts__item">
+              <dt>300+</dt>
+              <dd>предприятий получили консультационные услуги</dd>
+            </div>
+            <div class="history-facts__item">
+              <dt>70+</dt>
+              <dd>экономических споров разрешено третейским судом</dd>
+            </div>
+          </dl>
+
+          <div class="timeline-column">
+            <ol class="timeline-box">
+              <li class="timeline-content">
+                <time datetime="1990">1990</time>
+                <div class="content">
+                  <h3>Основание юридического кооператива «Гладиатор»</h3>
+                  <p>Десять выпускников и студентов старших курсов юридического факультета ЛГУ учредили юридический
+                    кооператив для правового обслуживания предприятий, учреждений и организаций города.</p>
+                </div>
+              </li>
+              <li class="timeline-content">
+                <time datetime="1993">1993</time>
+                <div class="content">
+                  <h3>Северо-Западная правовая контора</h3>
+                  <p>Юридический кооператив «Гладиатор» был переименован в кооператив «Северо-Западная правовая
+                    контора».</p>
+                </div>
+              </li>
+              <li class="timeline-content timeline-content--accent">
+                <time datetime="1994">1994</time>
+                <div class="content">
+                  <h3>Правовая контора К. Сопрачева и лицензия №7</h3>
+                  <p>На базе кооператива было создано ИЧП «Правовая контора К. Сопрачева». Контора вошла в число первых
+                    десяти юридических фирм Санкт-Петербурга, получивших лицензию Управления юстиции на оказание
+                    платных юридических услуг. Лицензия №7 от 07.07.94.</p>
+                </div>
+              </li>
+              <li class="timeline-content">
+                <time datetime="1996">1996</time>
+                <div class="content">
+                  <h3>Преобразование в ООО</h3>
+                  <p>ИЧП «Правовая контора К. Сопрачева» преобразовано в ООО «Правовая контора К. Сопрачева».</p>
+                </div>
+              </li>
+              <li class="timeline-content">
+                <time datetime="1997">1997</time>
+                <div class="content">
+                  <h3>Лицензия Министерства юстиции РФ</h3>
+                  <p>ООО «Правовая контора К. Сопрачева» получило лицензию Министерства юстиции Российской Федерации на
+                    оказание платных юридических услуг на всей территории Российской Федерации.</p>
+                </div>
+              </li>
+              <li class="timeline-content">
+                <time datetime="2000">2000–2017</time>
+                <div class="content">
+                  <h3>Постоянно действующий третейский суд</h3>
+                  <p>При ООО «Правовая контора К. Сопрачева» осуществлял арбитраж по экономическим спорам постоянно
+                    действующий третейский суд. За время работы он разрешил более 70 экономических споров.</p>
+                </div>
+              </li>
+              <li class="timeline-content">
+                <time>Сегодня</time>
+                <div class="content">
+                  <h3>Практика юридического сопровождения</h3>
+                  <p>За всю историю работы консультационные услуги получили более 300 предприятий и многие граждане.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+      <section class="section-four-services container">
+        <div class="services__title">
+          <h2 id="link2">УСЛУГИ</h2>
+        </div>
+        <p class="services__lead">
+          Оказываем консультационные и представительские услуги организациям, предпринимателям и гражданам.
+        </p>
+        <?= pkks_render_services($servicesData) ?>
+      </section>
+
+      <section class="section-five-price container">
+        <div class="section-five-price__title">
+          <h2 id="link3">ЦЕНА</h2>
+        </div>
+        <div class="section-five-price__content">
+          <p class="section-five-price__lead">
+            Услуги наших специалистов оцениваются за каждый человеко-час дифференцированно
+            в зависимости от уровня их квалификации.
+          </p>
+
+          <?= pkks_render_prices($pricesData) ?>
+        </div>
+      </section>
+
+      <section class="section-six-details container">
+        <div class="section-six-details__title">
+          <h2 id="link4">РЕКВИЗИТЫ</h2>
+        </div>
+        <div class="section-six-details__content">
+          <dl class="details-list">
+            <div class="details-list__group">
+              <dd><strong>Фирменное наименование:</strong>&nbsp;ООО «Правовая контора К.&nbsp;Сопрачева»</dd>
+              <dd><strong>Адрес:</strong>&nbsp;197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115,
+                к.&nbsp;1, пом.&nbsp;24Н, лит.&nbsp;А</dd>
+              <dt></dt>
+              <dd><strong>Телефон:</strong>&nbsp;
+                <a class="details-list__link" href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84
+                </a>
+                (многоканальный)
+              </dd>
+              <dd><strong>E-mail:</strong>&nbsp;
+                <a class="details-list__link" href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru
+                </a>
+              </dd>
+              <dd><strong>ОГРН</strong>&nbsp;1027800518888&nbsp;<strong>ИНН</strong>&nbsp;7801106330&nbsp;</dd>
+              <dd><strong>КПП</strong>&nbsp;781401001&nbsp;<strong>ОКПО</strong>&nbsp;35531946</dd>
+              <dd>р/с 40702810455000007540 в Северо-Западном банке ПАО «СБЕРБАНК», г.&nbsp;Санкт-Петербург,&nbsp;к/с
+                30101810500000000653, БИК 044030653</dd>
+              <dd><strong>Генеральный директор:</strong>&nbsp;Сопрачев Константин Александрович</dd>
+              <dd><strong>Система налогообложения:</strong>&nbsp;ООО «Правовая контора К.Сопрачева» является субъектом
+                малого предпринимательства и применяет упрощенную систему налогообложения. В силу этого, наши услуги не
+                облагаются налогом на добавленную стоимость.</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="section-seven-contacts">
+        <div class="contacts-payment">
+          <div class="contacts-payment__container container">
+            <h2 class="contacts-payment__title">ОПЛАТА УСЛУГ</h2>
+
+            <a class="contacts-payment__button"
+              href="https://qr.nspk.ru/AS1A00195VHK73QD8I4P480TGSC0GKCR?type=01&bank=100000000111&crc=AAE7"
+              target="_blank" rel="noopener noreferrer">
+              <img src="img/battonprice.webp" title="Здесь можно оплатить" alt="Здесь можно оплатить" loading="lazy"
+                decoding="async" width="268" height="268">
+            </a>
+          </div>
+        </div>
+
+        <div class="contacts-panel">
+          <div class="contacts-panel__container container">
+            <div class="contact-title">
+              <h2 id="link5">КОНТАКТЫ</h2>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-column">
+                <div class="contacts-content">
+                  <a class="address" href="https://dev.polymap.ru/pkks" target="_blank"
+                    rel="noopener noreferrer">АДРЕС
+                  </a>
+                  <ul class="contacts-list">
+                    <li>197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</li>
+                    <li>
+                      <span class="contacts-list__label">Телефон:</span>
+                      <a class="phone" href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84
+                      </a>
+                      (многоканальный)
+                    </li>
+                    <li>
+                      <span class="contacts-list__label">E-mail:</span>
+                      <a class="phone" href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="imgEntrance">
+                <a href="https://dev.polymap.ru/pkks" target="_blank" rel="noopener noreferrer">
+                  <img src="img/offic.webp" title="Офис ООО “Правовая контора К. Сопрачева”"
+                    alt="Вход ООО “Правовая контора К. Сопрачева”" loading="lazy" decoding="async" width="1350"
+                    height="1060">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="map container">
+        <iframe class="map__frame" title="Расположение офиса на карте"
+          src="https://yandex.ru/map-widget/v1/?um=constructor%3A54fa3fe17907d2a196ee2274f9720cd2dffe68a883ce18ccc644e6d43e6744dd&amp;source=constructor"
+          width="100%" height="500" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      </div>
+    </main>
+
+    <footer class="site-footer sectionEight-copyright" role="contentinfo">
+      <div class="site-footer__container container">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">Правовая контора К. Сопрачева</p>
+          <p class="site-footer__description">Юридические услуги в Санкт-Петербурге</p>
+        </div>
+
+        <nav class="site-footer__nav" aria-label="Навигация в подвале">
+          <p class="site-footer__heading">Навигация</p>
+          <a href="#link1">О нас</a>
+          <a href="#link2">Услуги</a>
+          <a href="#link3">Цена</a>
+          <a href="#link4">Реквизиты</a>
+          <a href="#link5">Контакты</a>
+        </nav>
+
+        <div class="site-footer__contacts">
+          <p class="site-footer__heading">Контакты</p>
+          <a href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84</a>
+          <a href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru</a>
+          <span>Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</span>
+        </div>
+
+        <div class="site-footer__bottom">
+          <p>Copyright © 2024 ООО «Правовая контора К. Сопрачева»</p>
+          <a class="site-footer__developer" href="https://kavweb.ru/" target="_blank" rel="noopener noreferrer">
+            <span>Разработчик —</span>
+            <img class="abk" src="img/kavLogoL.webp" title="Разработчик - KAVWEB" alt="KAVWEB" width="40" height="24">
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+
+</html>
