@@ -32,13 +32,16 @@ function pkks_admin_write_audit_event(string $event, array $context = []): void
     $logDir = dirname($logPath);
 
     if (!is_dir($logDir)) {
-        throw new RuntimeException('Admin audit log directory is missing.');
+        mkdir($logDir, 0775, true);
     }
 
+    $filteredContext = pkks_admin_filter_audit_context($context);
     $entry = [
         'time' => gmdate(DATE_ATOM),
         'event' => $event,
-        'context' => pkks_admin_filter_audit_context($context),
+        'login' => $filteredContext['login'] ?? null,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
     ];
 
     $json = json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -47,5 +50,7 @@ function pkks_admin_write_audit_event(string $event, array $context = []): void
         throw new RuntimeException('Admin audit event encoding failed.');
     }
 
-    file_put_contents($logPath, $json . PHP_EOL, FILE_APPEND | LOCK_EX);
+    if (file_put_contents($logPath, $json . PHP_EOL, FILE_APPEND | LOCK_EX) === false) {
+        throw new RuntimeException('Admin audit event writing failed.');
+    }
 }

@@ -208,6 +208,70 @@ body.pkks-admin-page {
     background: var(--admin-dark);
 }
 
+.pkks-admin-password-field {
+    position: relative;
+}
+
+.pkks-admin-password-field input {
+    padding-right: 56px;
+}
+
+.pkks-admin-login-form .pkks-admin-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    color: var(--admin-muted);
+    background: transparent;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.pkks-admin-login-form .pkks-admin-password-toggle:hover,
+.pkks-admin-login-form .pkks-admin-password-toggle:focus-visible {
+    color: var(--admin-text);
+    background: rgba(16, 3, 20, 0.06);
+}
+
+.pkks-admin-login-form .pkks-admin-password-toggle:focus-visible {
+    outline: 2px solid var(--admin-focus);
+    outline-offset: 2px;
+}
+
+.pkks-admin-login-form .pkks-admin-password-toggle:disabled {
+    color: rgba(16, 3, 20, 0.34);
+    background: transparent;
+}
+
+.pkks-admin-password-toggle svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.pkks-admin-password-toggle__slash {
+    opacity: 0;
+}
+
+.pkks-admin-password-toggle[aria-pressed="true"] .pkks-admin-password-toggle__slash {
+    opacity: 1;
+}
+
 .pkks-admin-footnote {
     margin: 16px 0 0;
     font-size: 13px;

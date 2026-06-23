@@ -7,6 +7,11 @@ function pkks_admin_csrf_start_session(): void
         return;
     }
 
+    if (function_exists('pkks_admin_start_session')) {
+        pkks_admin_start_session();
+        return;
+    }
+
     session_name('pkks_admin_session');
     session_start();
 }

@@ -43,7 +43,7 @@ function pkks_admin_write_login_attempts(array $attempts): void
     $storageDir = dirname($path);
 
     if (!is_dir($storageDir)) {
-        throw new RuntimeException('Admin runtime storage directory is missing.');
+        mkdir($storageDir, 0775, true);
     }
 
     $json = json_encode($attempts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -52,7 +52,9 @@ function pkks_admin_write_login_attempts(array $attempts): void
         throw new RuntimeException('Admin login attempts encoding failed.');
     }
 
-    file_put_contents($path, $json . PHP_EOL, LOCK_EX);
+    if (file_put_contents($path, $json . PHP_EOL, LOCK_EX) === false) {
+        throw new RuntimeException('Admin login attempts writing failed.');
+    }
 }
 
 function pkks_admin_is_login_blocked(string $login, array $config): bool
