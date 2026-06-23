@@ -1,0 +1,441 @@
+@font-face {
+    font-family: "Manrope";
+    src: url("../../font/manrope-cyrillic-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../font/manrope-cyrillic-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("../../font/manrope-cyrillic-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --admin-dark: #01001C;
+    --admin-light: #efeff1;
+    --admin-text: #100314;
+    --admin-card: #ffffff;
+    --admin-border: rgba(16, 3, 20, 0.10);
+    --admin-muted: rgba(16, 3, 20, 0.64);
+    --admin-white-muted: rgba(255, 255, 255, 0.72);
+    --admin-card-soft: #f7f9f9;
+    --admin-dark-border: rgba(255, 255, 255, 0.18);
+    --admin-dark-panel: rgba(255, 255, 255, 0.06);
+    --admin-focus: rgba(16, 3, 20, 0.28);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 0;
+}
+
+body.pkks-admin-page {
+    min-width: 0;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    color: var(--admin-text);
+    background: var(--admin-dark);
+    font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.pkks-admin-shell {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 32px 0;
+}
+
+.pkks-admin-login-page .pkks-admin-shell {
+    min-height: 100vh;
+    display: grid;
+    align-content: center;
+    gap: 18px;
+}
+
+.pkks-admin-auth-card,
+.pkks-admin-dashboard-intro,
+.pkks-admin-notice,
+.pkks-admin-section-card {
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    background: var(--admin-card);
+}
+
+.pkks-admin-auth-card {
+    width: min(560px, 100%);
+    margin: 0 auto;
+    padding: 36px;
+}
+
+.pkks-admin-brand,
+.pkks-admin-eyebrow {
+    margin: 0 0 10px;
+    color: var(--admin-muted);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.pkks-admin-auth-card h1,
+.pkks-admin-topbar h1,
+.pkks-admin-dashboard-intro h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: 0;
+}
+
+.pkks-admin-auth-card h1 {
+    font-size: 32px;
+}
+
+.pkks-admin-lead,
+.pkks-admin-muted,
+.pkks-admin-footnote,
+.pkks-admin-dashboard-intro p,
+.pkks-admin-section-card p,
+.pkks-admin-notice p,
+.pkks-admin-recovery p {
+    color: var(--admin-muted);
+}
+
+.pkks-admin-lead {
+    margin: 14px 0 0;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.pkks-admin-muted {
+    margin: 18px 0 0;
+}
+
+.pkks-admin-notice {
+    margin: 26px 0;
+    padding: 18px 20px;
+    background: var(--admin-card-soft);
+}
+
+.pkks-admin-auth-card .pkks-admin-notice {
+    margin: 26px 0 22px;
+}
+
+.pkks-admin-notice h2,
+.pkks-admin-recovery h2,
+.pkks-admin-section-card h2 {
+    margin: 0 0 8px;
+    color: var(--admin-text);
+    font-size: 18px;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.pkks-admin-notice p,
+.pkks-admin-recovery p,
+.pkks-admin-section-card p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.pkks-admin-login-form {
+    display: grid;
+    gap: 11px;
+}
+
+.pkks-admin-login-form label {
+    color: var(--admin-text);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.pkks-admin-login-form input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    color: var(--admin-muted);
+    background: var(--admin-light);
+    font: inherit;
+}
+
+.pkks-admin-login-form input:focus {
+    outline: 2px solid var(--admin-focus);
+    outline-offset: 2px;
+}
+
+.pkks-admin-login-form input:disabled,
+.pkks-admin-login-form button:disabled {
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.pkks-admin-login-form button,
+.pkks-admin-button {
+    min-height: 48px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+}
+
+.pkks-admin-login-form button {
+    margin-top: 10px;
+    color: #ffffff;
+    background: var(--admin-dark);
+}
+
+.pkks-admin-footnote {
+    margin: 16px 0 0;
+    font-size: 13px;
+}
+
+.pkks-admin-recovery {
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid var(--admin-border);
+}
+
+.pkks-admin-topbar {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 22px 24px;
+    border: 1px solid var(--admin-dark-border);
+    border-radius: 8px;
+    background: var(--admin-dark-panel);
+}
+
+.pkks-admin-topbar .pkks-admin-brand {
+    color: var(--admin-white-muted);
+}
+
+.pkks-admin-topbar h1 {
+    color: #ffffff;
+}
+
+.pkks-admin-status {
+    flex: 0 0 auto;
+    max-width: 320px;
+    padding: 9px 12px;
+    border: 1px solid var(--admin-dark-border);
+    border-radius: 6px;
+    color: #ffffff;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.pkks-admin-dashboard-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: end;
+    margin-bottom: 18px;
+    padding: 28px;
+}
+
+.pkks-admin-dashboard-intro h2 {
+    max-width: 720px;
+    font-size: 30px;
+}
+
+.pkks-admin-dashboard-intro p {
+    max-width: 760px;
+    margin: 14px 0 0;
+    font-size: 16px;
+}
+
+.pkks-admin-dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.pkks-admin-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 172px;
+    padding: 0 16px;
+}
+
+.pkks-admin-button--primary {
+    color: #ffffff;
+    background: var(--admin-dark);
+}
+
+.pkks-admin-button--secondary {
+    color: var(--admin-text);
+    background: var(--admin-card);
+    border-color: var(--admin-border);
+}
+
+.pkks-admin-section-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.pkks-admin-section-card {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 22px;
+}
+
+.pkks-admin-section-card span {
+    width: fit-content;
+    margin-top: 22px;
+    padding: 5px 9px;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    color: var(--admin-muted);
+    background: var(--admin-light);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pkks-admin-section-card--disabled {
+    color: var(--admin-muted);
+}
+
+.pkks-admin-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    justify-content: center;
+    margin-top: 22px;
+    color: var(--admin-white-muted);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.pkks-admin-footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.pkks-admin-footer a:focus,
+.pkks-admin-footer a:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+    .pkks-admin-dashboard-intro {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .pkks-admin-dashboard-actions {
+        justify-content: flex-start;
+    }
+
+    .pkks-admin-section-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .pkks-admin-section-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .pkks-admin-shell {
+        width: min(100% - 24px, 1120px);
+        padding: 18px 0;
+    }
+
+    .pkks-admin-auth-card,
+    .pkks-admin-dashboard-intro,
+    .pkks-admin-notice,
+    .pkks-admin-section-card,
+    .pkks-admin-topbar {
+        border-radius: 7px;
+    }
+
+    .pkks-admin-auth-card,
+    .pkks-admin-dashboard-intro {
+        padding: 22px;
+    }
+
+    .pkks-admin-auth-card h1 {
+        font-size: 26px;
+    }
+
+    .pkks-admin-lead {
+        font-size: 15px;
+    }
+
+    .pkks-admin-topbar {
+        display: block;
+        padding: 18px;
+    }
+
+    .pkks-admin-status {
+        max-width: none;
+        margin-top: 16px;
+        text-align: left;
+    }
+
+    .pkks-admin-dashboard-intro h2 {
+        font-size: 24px;
+    }
+
+    .pkks-admin-dashboard-actions,
+    .pkks-admin-button {
+        width: 100%;
+    }
+
+    .pkks-admin-section-card {
+        min-height: 158px;
+        padding: 18px;
+    }
+}
+
+@media (max-width: 360px) {
+    .pkks-admin-auth-card,
+    .pkks-admin-dashboard-intro,
+    .pkks-admin-notice,
+    .pkks-admin-section-card {
+        padding: 18px;
+    }
+
+    .pkks-admin-auth-card h1 {
+        font-size: 24px;
+    }
+
+    .pkks-admin-dashboard-intro h2 {
+        font-size: 22px;
+    }
+}
