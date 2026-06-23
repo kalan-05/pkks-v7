@@ -65,6 +65,9 @@ desktop.ini
 !/storage/logs/
 !/storage/logs/.gitkeep
 
+# Team JSON backups
+/data/backups/**/*.json
+
 # IDE and editor files
 .vscode/*
 !.vscode/extensions.json

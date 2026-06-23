@@ -28,7 +28,7 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
         <div class="pkks-admin-dashboard-intro__copy">
             <p class="pkks-admin-eyebrow">Админ-панель</p>
             <h2>Личный кабинет для управления контентом сайта</h2>
-            <p>Вы вошли как <?php echo pkks_admin_escape($currentLogin); ?>. Разделы редактора пока не подключены: эта панель не сохраняет данные и не меняет JSON-файлы.</p>
+            <p>Вы вошли как <?php echo pkks_admin_escape($currentLogin); ?>. Раздел «Сотрудники» подключён, остальные разделы пока недоступны.</p>
         </div>
         <div class="pkks-admin-dashboard-actions" aria-label="Навигация админ-панели">
             <a class="pkks-admin-button pkks-admin-button--primary" href="/admin/logout.php">Выйти</a>
@@ -38,12 +38,16 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
 
     <?php pkks_admin_render_notice(
         'Авторизация активна.',
-        'Доступ к этой странице разрешён только после успешного входа.'
+        'Доступ к этой странице и редактору сотрудников разрешён только после успешного входа.'
     ); ?>
 
     <section class="pkks-admin-section-grid" aria-label="Будущие разделы админ-панели">
         <?php
-        pkks_admin_render_panel_card('Сотрудники', 'Будущая настройка ФИО, должности и образования.');
+        pkks_admin_render_panel_card('Сотрудники', 'Редактирование ФИО, должности и образования.', [
+            'href' => '/admin/team.php',
+            'label' => 'Открыть редактор',
+            'disabled' => false,
+        ]);
         pkks_admin_render_panel_card('Услуги', 'Будущая настройка списка услуг.');
         pkks_admin_render_panel_card('Стоимость', 'Будущая настройка цен и примечаний.');
         pkks_admin_render_panel_card('Безопасность', 'Будущая настройка доступа и журнала действий.');

@@ -36,6 +36,9 @@ function pkks_admin_write_audit_event(string $event, array $context = []): void
     }
 
     $filteredContext = pkks_admin_filter_audit_context($context);
+    $entryContext = $filteredContext;
+    unset($entryContext['login']);
+
     $entry = [
         'time' => gmdate(DATE_ATOM),
         'event' => $event,
@@ -43,6 +46,10 @@ function pkks_admin_write_audit_event(string $event, array $context = []): void
         'ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
         'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
     ];
+
+    if ($entryContext !== []) {
+        $entry['context'] = $entryContext;
+    }
 
     $json = json_encode($entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 

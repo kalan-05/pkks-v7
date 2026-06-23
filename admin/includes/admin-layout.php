@@ -77,13 +77,25 @@ function pkks_admin_render_notice(string $title, string $text): void
     echo '        </section>' . PHP_EOL;
 }
 
-function pkks_admin_render_panel_card(string $title, string $description): void
+function pkks_admin_render_panel_card(string $title, string $description, array $options = []): void
 {
-    echo '            <article class="pkks-admin-section-card pkks-admin-section-card--disabled" aria-disabled="true">' . PHP_EOL;
+    $href = is_string($options['href'] ?? null) ? $options['href'] : '';
+    $label = is_string($options['label'] ?? null) ? $options['label'] : 'Открыть';
+    $isDisabled = ($options['disabled'] ?? true) !== false || $href === '';
+    $cardClass = 'pkks-admin-section-card' . ($isDisabled ? ' pkks-admin-section-card--disabled' : ' pkks-admin-section-card--active');
+    $ariaDisabled = $isDisabled ? ' aria-disabled="true"' : '';
+
+    echo '            <article class="' . $cardClass . '"' . $ariaDisabled . '>' . PHP_EOL;
     echo '                <div>' . PHP_EOL;
     echo '                    <h2>' . pkks_admin_escape($title) . '</h2>' . PHP_EOL;
     echo '                    <p>' . pkks_admin_escape($description) . '</p>' . PHP_EOL;
     echo '                </div>' . PHP_EOL;
-    echo '                <span>Будущий раздел</span>' . PHP_EOL;
+
+    if ($isDisabled) {
+        echo '                <span>Будущий раздел</span>' . PHP_EOL;
+    } else {
+        echo '                <a class="pkks-admin-section-card__link" href="' . pkks_admin_escape($href) . '">' . pkks_admin_escape($label) . '</a>' . PHP_EOL;
+    }
+
     echo '            </article>' . PHP_EOL;
 }
