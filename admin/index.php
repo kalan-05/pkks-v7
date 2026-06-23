@@ -28,7 +28,7 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
         <div class="pkks-admin-dashboard-intro__copy">
             <p class="pkks-admin-eyebrow">Админ-панель</p>
             <h2>Личный кабинет для управления контентом сайта</h2>
-            <p>Вы вошли как <?php echo pkks_admin_escape($currentLogin); ?>. Разделы «Сотрудники» и «Услуги» подключены, остальные разделы пока недоступны.</p>
+            <p>Вы вошли как <?php echo pkks_admin_escape($currentLogin); ?>. Разделы «Сотрудники», «Услуги» и «Цены» подключены, остальные разделы пока недоступны.</p>
         </div>
         <div class="pkks-admin-dashboard-actions" aria-label="Навигация админ-панели">
             <a class="pkks-admin-button pkks-admin-button--primary" href="/admin/logout.php">Выйти</a>
@@ -53,7 +53,11 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
             'label' => 'Открыть редактор',
             'disabled' => false,
         ]);
-        pkks_admin_render_panel_card('Стоимость', 'Будущая настройка цен и примечаний.');
+        pkks_admin_render_panel_card('Цены', 'Редактирование тарифов и примечаний.', [
+            'href' => '/admin/prices.php',
+            'label' => 'Открыть редактор',
+            'disabled' => false,
+        ]);
         pkks_admin_render_panel_card('Безопасность', 'Будущая настройка доступа и журнала действий.');
         ?>
     </section>
