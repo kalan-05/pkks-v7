@@ -588,6 +588,51 @@ body.pkks-admin-page {
     padding: 6px 0 0;
 }
 
+.pkks-admin-services-group {
+    display: grid;
+    gap: 18px;
+}
+
+.pkks-admin-services-group-grid {
+    grid-template-columns: minmax(140px, 0.28fr) minmax(0, 1fr);
+}
+
+.pkks-admin-services-card-list {
+    display: grid;
+    gap: 14px;
+}
+
+.pkks-admin-services-card {
+    padding: 18px;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    background: var(--admin-card-soft);
+}
+
+.pkks-admin-services-card__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+.pkks-admin-services-card h3 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 18px;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.pkks-admin-services-card-grid {
+    grid-template-columns: minmax(140px, 0.3fr) minmax(0, 1fr);
+}
+
+.pkks-admin-services-items textarea {
+    min-height: 148px;
+}
+
 .pkks-admin-team-submit {
     border: 0;
     cursor: pointer;
@@ -643,7 +688,10 @@ body.pkks-admin-page {
     }
 
     .pkks-admin-team-card__header,
-    .pkks-admin-team-grid {
+    .pkks-admin-team-grid,
+    .pkks-admin-services-card__header,
+    .pkks-admin-services-group-grid,
+    .pkks-admin-services-card-grid {
         grid-template-columns: 1fr;
     }
 
