@@ -9,14 +9,19 @@
 - `index.php`
 - `index.html`
 - `.htaccess`
+- `admin/`
+- `config/`
+- `data/`
+- `includes/`
+- `storage/`
 - `css/`
 - `js/`
 - `img/`
 - `font/`
-- `data/`
-- `includes/`
 
 Не нужно загружать локальные временные папки, логи, `.git`, `.codex_tmp`, `tmp`, `test-results` и рабочие файлы разработчика.
+
+Не загружайте в публичные архивы локальный файл `config/admin-auth.php`, если он уже был создан на машине разработчика. Для production его нужно создать отдельно на хостинге.
 
 ## 2. Какие файлы должны лежать в корне сайта
 
@@ -25,11 +30,55 @@
 - `index.php`
 - `index.html`
 - `.htaccess`
-- папки `css`, `js`, `img`, `font`, `data`, `includes`
+- папки `admin`, `config`, `data`, `includes`, `storage`, `css`, `js`, `img`, `font`
 
 Корень сайта - это папка, из которой хостинг отдаёт главную страницу домена.
 
-## 3. Как проверить `index.php`
+## 3. Настройка admin config
+
+Вход в админку включается только после создания файла:
+
+```text
+config/admin-auth.php
+```
+
+Порядок настройки:
+
+1. Скопировать `config/admin-auth.php.example` в `config/admin-auth.php`.
+2. Сгенерировать `password_hash` для нового сильного пароля.
+3. Вставить логин администратора в `admin_login`.
+4. Вставить hash в `admin_password_hash`.
+5. Не хранить plaintext-пароль в репозитории, документах, тикетах или публичных архивах.
+6. Проверить, что `config/admin-auth.php` не открывается из браузера.
+
+Пример генерации hash через PHP в PowerShell:
+
+```powershell
+$env:PKKS_ADMIN_PASSWORD = "ЗАДАЙТЕ_СИЛЬНЫЙ_ПАРОЛЬ"
+php -r '$password = getenv("PKKS_ADMIN_PASSWORD"); if ($password === false || $password === "") { fwrite(STDERR, "empty password" . PHP_EOL); exit(1); } echo password_hash($password, PASSWORD_DEFAULT), PHP_EOL;'
+Remove-Item Env:\PKKS_ADMIN_PASSWORD
+```
+
+Если локально используется прямой путь к PHP, замените `php` на путь к исполняемому файлу PHP. Production-инструкция при этом остаётся хостинг-нейтральной.
+
+Ручной сброс пароля выполняется так же: сгенерировать новый hash и заменить значение `admin_password_hash` в `config/admin-auth.php` на хостинге.
+
+## 4. Writable-пути
+
+После загрузки нужно дать PHP минимальные права, достаточные для записи в:
+
+- `data/team.json`
+- `data/services.json`
+- `data/prices.json`
+- `data/backups/team/`
+- `data/backups/services/`
+- `data/backups/prices/`
+- `storage/logs/`
+- `storage/login-attempts.json`
+
+Не ставьте `777` как стандарт. Настройте минимальные права для пользователя, под которым на этом хостинге выполняется PHP.
+
+## 5. Как проверить `index.php`
 
 После загрузки открыть:
 
@@ -48,7 +97,7 @@
 
 Если вместо сайта выводится PHP-код, значит PHP не выполняется на хостинге или файл попал не в ту зону сайта.
 
-## 4. Как проверить `index.html` fallback
+## 6. Как проверить `index.html` fallback
 
 Открыть:
 
@@ -58,9 +107,28 @@
 
 `index.html` должен открываться как fallback/reference-версия сайта. Его нельзя удалять: он нужен для безопасного отката и сравнения.
 
-## 5. Что делать на Apache
+## 7. Как проверить админку
 
-Если хостинг использует Apache и поддерживает `.htaccess`, файл `.htaccess` в корне должен задать:
+Открыть:
+
+```text
+/admin/login.php
+```
+
+Ожидаемый результат:
+
+- страница входа открывается;
+- после ввода логина и пароля открывается `/admin/index.php`;
+- `/admin/team.php` открывает редактор сотрудников;
+- `/admin/services.php` открывает редактор услуг;
+- `/admin/prices.php` открывает редактор цен;
+- `/admin/logout.php` завершает сессию.
+
+Если `config/admin-auth.php` не создан, вход должен быть отключён с сообщением о необходимости настройки конфига.
+
+## 8. Что делать на Apache
+
+Если хостинг использует Apache и поддерживает `.htaccess`, текущие файлы должны задать:
 
 ```apache
 DirectoryIndex index.php index.html
@@ -71,7 +139,11 @@ DirectoryIndex index.php index.html
 - `/` открывает PHP-версию сайта;
 - `/index.php` открывается;
 - `/index.html` открывается как fallback/reference;
-- `/includes/bootstrap.php` не открывается напрямую.
+- `/includes/bootstrap.php` не открывается напрямую;
+- `/storage/login-attempts.json` не открывается напрямую;
+- `/storage/logs/admin-audit.log` не открывается напрямую;
+- `/config/admin-auth.php` не открывается напрямую;
+- файлы из `data/backups/` не открываются напрямую.
 
 Если `/` продолжает открывать `index.html`, нужно проверить:
 
@@ -79,7 +151,7 @@ DirectoryIndex index.php index.html
 - не переопределяет ли хостинг `DirectoryIndex` в панели;
 - можно ли в панели поставить `index.php` выше `index.html`.
 
-## 6. Что делать на Nginx
+## 9. Что делать на Nginx
 
 Nginx не использует `.htaccess`.
 
@@ -89,11 +161,16 @@ Nginx не использует `.htaccess`.
 index index.php index.html;
 ```
 
+Также нужно отдельно закрыть прямой доступ к:
+
+- `config/admin-auth.php`;
+- `storage/`;
+- `data/backups/`;
+- `includes/`.
+
 Настройку Nginx должен выполнить владелец хостинга или техническая поддержка хостинга. Конкретный `server block` зависит от хостинга, поэтому полный серверный конфиг в этом пакете не приводится.
 
-Также нужно отдельно закрыть прямой доступ к `includes/`, потому что `includes/.htaccess` на Nginx не сработает.
-
-## 7. Если хостинг-панель сама выбирает `index.html`
+## 10. Если хостинг-панель сама выбирает `index.html`
 
 Если главная страница `/` открывает старый `index.html`, а не PHP-render, нужно:
 
@@ -104,15 +181,16 @@ index index.php index.html;
 
 Если изменить приоритет нельзя, PHP-render не станет основной версией сайта на `/`. Временным вариантом остаётся прямое открытие `/index.php` или fallback через `/index.html`.
 
-## 8. Что не нужно менять
+## 11. Что не нужно менять
 
 Не нужно менять:
 
 - `index.php`;
 - `index.html`;
 - `.htaccess`, если хостинг поддерживает текущий вариант;
+- файлы в `admin/`;
 - файлы в `includes/`;
-- JSON-файлы в `data/`;
+- JSON-файлы в `data/`, кроме штатного сохранения через админку;
 - CSS, JS, изображения и шрифты;
 - DNS без отдельной задачи;
 - production-настройки без подтверждённого доступа и отдельного плана.
