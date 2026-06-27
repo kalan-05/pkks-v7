@@ -68,6 +68,11 @@ desktop.ini
 # Team JSON backups
 /data/backups/**/*.json
 
+# Uploaded team photos
+/img/team/*
+!/img/team/.gitkeep
+!/img/team/.htaccess
+
 # IDE and editor files
 .vscode/*
 !.vscode/extensions.json

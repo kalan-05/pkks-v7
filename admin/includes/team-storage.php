@@ -38,6 +38,102 @@ function pkks_admin_load_team_data(): array
     return $decoded;
 }
 
+function pkks_admin_find_team_employee(array $teamData, string $employeeId): ?array
+{
+    $employees = isset($teamData['employees']) && is_array($teamData['employees'])
+        ? $teamData['employees']
+        : [];
+
+    foreach ($employees as $employee) {
+        if (!is_array($employee)) {
+            continue;
+        }
+
+        $currentId = pkks_admin_scalar_to_string($employee['id'] ?? '');
+
+        if ($currentId === $employeeId) {
+            return $employee;
+        }
+    }
+
+    return null;
+}
+
+function pkks_admin_normalize_team_photo_metadata(
+    array $employee,
+    string $photoAltRaw,
+    string $photoTitleRaw,
+    array &$errors
+): array {
+    $employeeId = pkks_admin_scalar_to_string($employee['id'] ?? '');
+    $fallback = pkks_admin_scalar_to_string($employee['fullName'] ?? '');
+
+    if ($fallback === '') {
+        $fallback = $employeeId !== '' ? $employeeId : 'Сотрудник';
+    }
+
+    $photoAlt = pkks_admin_validate_plain_text(
+        $photoAltRaw,
+        'Alt фото сотрудника "' . $employeeId . '"',
+        180,
+        false,
+        $errors
+    );
+    $photoTitle = pkks_admin_validate_plain_text(
+        $photoTitleRaw,
+        'Title фото сотрудника "' . $employeeId . '"',
+        180,
+        false,
+        $errors
+    );
+
+    return [
+        'photoAlt' => $photoAlt !== '' ? $photoAlt : $fallback,
+        'photoTitle' => $photoTitle !== '' ? $photoTitle : $fallback,
+    ];
+}
+
+function pkks_admin_update_team_employee_photo_fields(
+    array $teamData,
+    string $employeeId,
+    string $photoPath,
+    string $photoAlt,
+    string $photoTitle
+): array {
+    $employees = isset($teamData['employees']) && is_array($teamData['employees'])
+        ? $teamData['employees']
+        : [];
+    $nextEmployees = [];
+    $updated = false;
+
+    foreach ($employees as $employee) {
+        if (!is_array($employee)) {
+            $nextEmployees[] = $employee;
+            continue;
+        }
+
+        if (pkks_admin_scalar_to_string($employee['id'] ?? '') !== $employeeId) {
+            $nextEmployees[] = $employee;
+            continue;
+        }
+
+        $nextEmployee = $employee;
+        $nextEmployee['photo'] = $photoPath;
+        $nextEmployee['photoAlt'] = $photoAlt;
+        $nextEmployee['photoTitle'] = $photoTitle;
+        $nextEmployees[] = $nextEmployee;
+        $updated = true;
+    }
+
+    if (!$updated) {
+        throw new RuntimeException('Team employee not found for photo update.');
+    }
+
+    $teamData['employees'] = $nextEmployees;
+
+    return $teamData;
+}
+
 function pkks_admin_validate_team_payload(array $post, array $currentData): array
 {
     $errors = [];

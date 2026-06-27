@@ -21,13 +21,30 @@ try {
 }
 
 $employees = isset($teamData['employees']) && is_array($teamData['employees']) ? $teamData['employees'] : [];
+$mainFormId = 'pkks-admin-team-main-form';
 
-if ($flash === null && ($_GET['status'] ?? '') === 'saved') {
-    $flash = [
-        'type' => 'success',
-        'title' => 'Изменения сохранены.',
-        'messages' => [],
-    ];
+if ($flash === null) {
+    $status = $_GET['status'] ?? '';
+
+    if ($status === 'saved') {
+        $flash = [
+            'type' => 'success',
+            'title' => 'Изменения сохранены.',
+            'messages' => [],
+        ];
+    } elseif ($status === 'photo-saved') {
+        $flash = [
+            'type' => 'success',
+            'title' => 'Фото сотрудника обновлено.',
+            'messages' => [],
+        ];
+    } elseif ($status === 'photo-error') {
+        $flash = [
+            'type' => 'error',
+            'title' => 'Фото не обновлено.',
+            'messages' => ['Проверьте файл и повторите попытку.'],
+        ];
+    }
 }
 
 pkks_admin_render_header('Сотрудники', ['body_class' => 'pkks-admin-team-page']);
@@ -53,8 +70,11 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
         'Проверьте data/team.json и повторите попытку.'
     ); ?>
 <?php else: ?>
-    <form class="pkks-admin-team-form" action="/admin/api/save-team.php" method="post">
+    <form id="<?php echo pkks_admin_escape($mainFormId); ?>" action="/admin/api/save-team.php" method="post">
         <?php echo pkks_admin_csrf_field() . PHP_EOL; ?>
+    </form>
+
+    <div class="pkks-admin-team-form">
 
 <?php foreach ($employees as $employee): ?>
     <?php if (!is_array($employee)) {
@@ -64,6 +84,10 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
     $employeeId = pkks_admin_team_string($employee['id'] ?? '');
     $fieldId = pkks_admin_team_field_id($employeeId);
     $values = pkks_admin_team_form_values($employee, $formData[$employeeId] ?? null);
+    $photoPath = pkks_admin_team_string($employee['photo'] ?? '');
+    $photoAlt = pkks_admin_team_string($employee['photoAlt'] ?? '');
+    $photoTitle = pkks_admin_team_string($employee['photoTitle'] ?? '');
+    $photoSrc = pkks_admin_team_photo_src($photoPath);
     ?>
         <article class="pkks-admin-team-card" aria-labelledby="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-title">
             <header class="pkks-admin-team-card__header">
@@ -74,6 +98,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
                 <label class="pkks-admin-team-visible" for="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-visible">
                     <input
                         id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-visible"
+                        form="<?php echo pkks_admin_escape($mainFormId); ?>"
                         type="checkbox"
                         name="employees[<?php echo pkks_admin_escape($employeeId); ?>][visible]"
                         value="1"
@@ -88,6 +113,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
                     <span>Порядок</span>
                     <input
                         id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-sort"
+                        form="<?php echo pkks_admin_escape($mainFormId); ?>"
                         type="number"
                         name="employees[<?php echo pkks_admin_escape($employeeId); ?>][sortOrder]"
                         min="1"
@@ -102,6 +128,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
                     <span>ФИО</span>
                     <input
                         id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-name"
+                        form="<?php echo pkks_admin_escape($mainFormId); ?>"
                         type="text"
                         name="employees[<?php echo pkks_admin_escape($employeeId); ?>][fullName]"
                         maxlength="120"
@@ -114,6 +141,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
                     <span>Должность</span>
                     <input
                         id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-position"
+                        form="<?php echo pkks_admin_escape($mainFormId); ?>"
                         type="text"
                         name="employees[<?php echo pkks_admin_escape($employeeId); ?>][position]"
                         maxlength="160"
@@ -126,39 +154,77 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
                     <span>Образование</span>
                     <textarea
                         id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-education"
+                        form="<?php echo pkks_admin_escape($mainFormId); ?>"
                         name="employees[<?php echo pkks_admin_escape($employeeId); ?>][education]"
                         rows="4"
                     ><?php echo pkks_admin_escape($values['education']); ?></textarea>
                 </label>
             </div>
 
-            <div class="pkks-admin-team-readonly" aria-label="Поля только для просмотра">
-                <div>
-                    <span>Фото</span>
-                    <code><?php echo pkks_admin_escape(pkks_admin_team_string($employee['photo'] ?? '')); ?></code>
-                </div>
-<?php if (pkks_admin_team_string($employee['photoAlt'] ?? '') !== ''): ?>
-                <div>
-                    <span>Alt фото</span>
-                    <code><?php echo pkks_admin_escape(pkks_admin_team_string($employee['photoAlt'] ?? '')); ?></code>
-                </div>
+            <section class="pkks-admin-team-photo-panel" aria-label="Замена фото сотрудника">
+                <div class="pkks-admin-team-photo-preview" aria-label="Текущее фото">
+<?php if ($photoSrc !== ''): ?>
+                    <img src="<?php echo pkks_admin_escape($photoSrc); ?>" alt="<?php echo pkks_admin_escape($photoAlt !== '' ? $photoAlt : $values['fullName']); ?>">
+<?php else: ?>
+                    <span>Фото не задано</span>
 <?php endif; ?>
-<?php if (pkks_admin_team_string($employee['photoTitle'] ?? '') !== ''): ?>
-                <div>
-                    <span>Title фото</span>
-                    <code><?php echo pkks_admin_escape(pkks_admin_team_string($employee['photoTitle'] ?? '')); ?></code>
                 </div>
-<?php endif; ?>
-            </div>
+
+                <div class="pkks-admin-team-photo-current">
+                    <span>Текущий путь photo</span>
+                    <code><?php echo pkks_admin_escape($photoPath !== '' ? $photoPath : 'не задан'); ?></code>
+                </div>
+
+                <form class="pkks-admin-team-photo-form" action="/admin/api/upload-team-photo.php" method="post" enctype="multipart/form-data">
+                    <?php echo pkks_admin_csrf_field() . PHP_EOL; ?>
+                    <input type="hidden" name="employee_id" value="<?php echo pkks_admin_escape($employeeId); ?>">
+
+                    <label class="pkks-admin-team-field pkks-admin-team-field--full" for="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-file">
+                        <span>Новое фото</span>
+                        <input
+                            id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-file"
+                            type="file"
+                            name="photo"
+                            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                            required
+                        >
+                    </label>
+
+                    <label class="pkks-admin-team-field" for="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-alt">
+                        <span>Alt фото</span>
+                        <input
+                            id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-alt"
+                            type="text"
+                            name="photoAlt"
+                            maxlength="180"
+                            value="<?php echo pkks_admin_escape($photoAlt); ?>"
+                        >
+                    </label>
+
+                    <label class="pkks-admin-team-field" for="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-title">
+                        <span>Title фото</span>
+                        <input
+                            id="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-title"
+                            type="text"
+                            name="photoTitle"
+                            maxlength="180"
+                            value="<?php echo pkks_admin_escape($photoTitle); ?>"
+                        >
+                    </label>
+
+                    <p class="pkks-admin-team-photo-hint">jpg, png, webp, до 3 MB.</p>
+                    <button class="pkks-admin-button pkks-admin-button--secondary pkks-admin-team-photo-submit" type="submit">Заменить фото</button>
+                </form>
+            </section>
         </article>
 
 <?php endforeach; ?>
 
         <div class="pkks-admin-team-actions">
-            <button class="pkks-admin-button pkks-admin-button--primary pkks-admin-team-submit" type="submit">Сохранить изменения</button>
+            <button class="pkks-admin-button pkks-admin-button--primary pkks-admin-team-submit" type="submit" form="<?php echo pkks_admin_escape($mainFormId); ?>">Сохранить изменения</button>
             <a class="pkks-admin-button pkks-admin-button--secondary" href="/admin/index.php">Назад в админ-панель</a>
         </div>
-    </form>
+    </div>
 <?php endif; ?>
 <?php
 pkks_admin_render_footer([
@@ -237,4 +303,15 @@ function pkks_admin_team_field_id(string $employeeId): string
     $fieldId = preg_replace('/[^a-zA-Z0-9_-]+/', '-', $employeeId);
 
     return is_string($fieldId) && $fieldId !== '' ? $fieldId : 'employee';
+}
+
+function pkks_admin_team_photo_src(string $photoPath): string
+{
+    $photoPath = trim(str_replace('\\', '/', $photoPath));
+
+    if ($photoPath === '' || str_starts_with($photoPath, '//') || preg_match('/^[a-z][a-z0-9+.-]*:/i', $photoPath) === 1) {
+        return '';
+    }
+
+    return '/' . ltrim($photoPath, '/');
 }
