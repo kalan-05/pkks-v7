@@ -416,6 +416,89 @@ body.pkks-admin-page {
     outline-offset: 2px;
 }
 
+.pkks-admin-security-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.pkks-admin-security-card {
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    background: var(--admin-card);
+}
+
+.pkks-admin-security-card__header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.pkks-admin-security-card h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 18px;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.pkks-admin-security-card p {
+    margin: 0;
+    color: var(--admin-muted);
+    font-size: 15px;
+}
+
+.pkks-admin-security-badge {
+    flex: 0 0 auto;
+    padding: 5px 9px;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.pkks-admin-security-badge--pass {
+    border-color: rgba(20, 120, 70, 0.28);
+    color: #135f3c;
+    background: #f1f8f4;
+}
+
+.pkks-admin-security-badge--warning {
+    border-color: rgba(158, 102, 20, 0.28);
+    color: #7c4c0d;
+    background: #fff8e8;
+}
+
+.pkks-admin-security-badge--action-required {
+    border-color: rgba(160, 30, 30, 0.30);
+    color: #8d1e1e;
+    background: #fff4f4;
+}
+
+.pkks-admin-security-badge--unknown {
+    color: var(--admin-muted);
+    background: var(--admin-light);
+}
+
+.pkks-admin-security-details {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0 0;
+    padding-left: 18px;
+    color: var(--admin-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.pkks-admin-security-details li {
+    overflow-wrap: anywhere;
+}
+
 .pkks-admin-team-form {
     display: grid;
     gap: 18px;
@@ -773,6 +856,10 @@ body.pkks-admin-page {
         grid-template-columns: 1fr;
     }
 
+    .pkks-admin-security-grid {
+        grid-template-columns: 1fr;
+    }
+
     .pkks-admin-team-card__header,
     .pkks-admin-team-grid,
     .pkks-admin-services-card__header,
@@ -851,6 +938,14 @@ body.pkks-admin-page {
     .pkks-admin-section-card {
         min-height: 158px;
         padding: 18px;
+    }
+
+    .pkks-admin-security-card {
+        padding: 18px;
+    }
+
+    .pkks-admin-security-card__header {
+        display: grid;
     }
 
     .pkks-admin-team-card,
