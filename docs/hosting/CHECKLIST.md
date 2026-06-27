@@ -46,6 +46,19 @@
 
 No-op save - это сохранение формы без смыслового изменения текста. Перед такой проверкой убедитесь, что есть backup текущего файла или что изменение допустимо для заказчика.
 
+## Загрузка фото сотрудников
+
+- [ ] Войти в `/admin/team.php`.
+- [ ] Загрузить тестовое фото сотрудника в формате jpg, jpeg, png или webp размером до 3 MB.
+- [ ] Проверить redirect на `/admin/team.php?status=photo-saved`.
+- [ ] Проверить, что фото появилось в `img/team/`.
+- [ ] Проверить, что путь к фото сохранился в `data/team.json`.
+- [ ] Проверить, что фото отображается на публичной странице.
+- [ ] Проверить, что backup `data/backups/team/team-*.json` создан.
+- [ ] Проверить audit event `team_photo_update` в `storage/logs/admin-audit.log`.
+- [ ] Проверить, что старое фото не удалилось автоматически.
+- [ ] Проверить, что `img/team/` не показывает directory listing.
+
 ## Runtime и служебные файлы
 
 - [ ] `/includes/bootstrap.php` не открывается напрямую.
@@ -57,6 +70,7 @@ No-op save - это сохранение формы без смыслового 
 - [ ] JSON backup из `data/backups/services/` не скачивается напрямую.
 - [ ] JSON backup из `data/backups/prices/` не скачивается напрямую.
 - [ ] Directory listing служебных папок выключен.
+- [ ] PHP-скрипты не могут выполняться из публичной upload-папки `img/team/`.
 
 ## Как понять, что `/` открыл PHP-render
 
@@ -81,6 +95,10 @@ No-op save - это сохранение формы без смыслового 
 - вход в админку не работает после настройки `config/admin-auth.php`;
 - save в админке не создаёт backup;
 - save в админке не пишет audit log;
+- загрузка фото сотрудника не создаёт backup `data/team.json`;
+- загрузка фото сотрудника не пишет audit event `team_photo_update`;
+- после успешной загрузки фото нет redirect на `/admin/team.php?status=photo-saved`;
+- файл фото не появляется в `img/team/` или не отображается на публичной странице;
 - `includes/*.php` открываются напрямую;
 - `config/admin-auth.php` открывается напрямую;
 - runtime-файлы из `storage/` открываются напрямую;
@@ -98,7 +116,10 @@ No-op save - это сохранение формы без смыслового 
 - Загружены ли `data/team.json`, `data/services.json`, `data/prices.json`.
 - Есть ли у PHP право читать и писать нужные `data/*.json`.
 - Есть ли у PHP право писать в `data/backups/*/`.
+- Есть ли у PHP право писать в `img/team/`.
 - Есть ли у PHP право писать в `storage/logs/` и `storage/login-attempts.json`.
+- Разрешает ли PHP загрузку файлов до 3 MB.
+- Доступно ли расширение fileinfo; если нет, проходит ли fallback-проверка через `getimagesize`.
 - Стоит ли `index.php` выше `index.html` в настройках index-файлов.
 - Поддерживает ли хостинг `.htaccess`.
 - Закрыт ли прямой доступ к `config/`, `storage/`, `data/backups/` и `includes/`.

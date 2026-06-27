@@ -11,6 +11,8 @@
 | PHP sessions | Для авторизации в `/admin/`. |
 | Поддержка `password_hash` и `password_verify` | Для проверки пароля администратора по hash. |
 | Поддержка `random_bytes` и `hash_equals` | Для CSRF-токенов и безопасного сравнения значений. |
+| Поддержка загрузки файлов до 3 MB | Для замены фото сотрудников через `/admin/team.php`. |
+| PHP fileinfo, если доступен на хостинге | Для MIME-проверки загруженных фото через `finfo`. Если расширения нет, используется строгая проверка изображения через `getimagesize`. |
 | Возможность выполнять `index.php` | Главная страница должна открываться через PHP-entrypoint. |
 | Возможность читать `data/*.json` из PHP | Публичная часть должна получать данные сотрудников, услуг и цен. |
 | Возможность писать в разрешённые JSON и runtime-папки | Админка должна сохранять данные, создавать backup, audit log и rate-limit файл. |
@@ -28,6 +30,7 @@
 - `data/backups/team/`
 - `data/backups/services/`
 - `data/backups/prices/`
+- `img/team/`
 - `storage/logs/`
 - `storage/login-attempts.json`
 
@@ -64,11 +67,13 @@ config/admin-auth.php.example
 - `admin/.htaccess` задаёт `DirectoryIndex index.php login.php`;
 - `includes/.htaccess` закрывает прямой доступ к `includes/`;
 - `storage/.htaccess` закрывает прямой доступ к `storage/`.
+- `img/team/.htaccess` запрещает directory listing в папке загруженных фото.
 
 Отдельно нужно проверить запрет прямого доступа к:
 
 - `config/admin-auth.php`;
 - `data/backups/`.
+- `img/team/` на отсутствие directory listing и запрет выполнения скриптов.
 
 Если этих запретов нет, их нужно настроить в панели хостинга или через поддержку хостинга.
 
@@ -83,6 +88,7 @@ config/admin-auth.php.example
 - запрет прямого доступа к `storage/`;
 - запрет прямого доступа к `data/backups/`;
 - запрет прямого доступа к `includes/`.
+- запрет directory listing и выполнения скриптов в `img/team/`.
 
 Конкретный `server block` или правила панели зависят от хостинга. Их должен настроить владелец хостинга или техническая поддержка хостинга.
 
@@ -90,6 +96,7 @@ config/admin-auth.php.example
 
 - Доступ к PHP error log.
 - Запрет directory listing на уровне хостинга.
+- Включённое PHP fileinfo для более прямой MIME-проверки загруженных фото.
 - Удобная настройка порядка index-файлов в панели хостинга.
 - Возможность быстро менять права на файлы и папки.
 - Возможность сделать резервную копию файлов перед ручным rollback.
@@ -100,8 +107,11 @@ config/admin-auth.php.example
 - Включено ли расширение JSON.
 - Работают ли PHP sessions.
 - Поддерживаются ли `password_hash`, `password_verify`, `random_bytes`.
+- Можно ли загружать файлы до 3 MB через PHP.
+- Доступно ли расширение fileinfo.
 - Как в панели задаётся приоритет `index.php` перед `index.html`.
 - Поддерживается ли `.htaccess`.
 - Как закрыть прямой web-доступ к `config/`, `storage/`, `data/backups/` и `includes/`, если `.htaccess` не поддерживается.
+- Как запретить directory listing и выполнение скриптов в публичной upload-папке `img/team/`.
 - Под каким пользователем PHP пишет файлы и какие минимальные права нужны для writable-путей.
 - Где смотреть PHP errors, если публичная часть или админка вернёт 500.
