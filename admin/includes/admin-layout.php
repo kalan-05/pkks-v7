@@ -27,6 +27,7 @@ function pkks_admin_render_header(string $title, array $options = []): void
     echo '    <meta charset="utf-8">' . PHP_EOL;
     echo '    <meta name="viewport" content="width=device-width, initial-scale=1">' . PHP_EOL;
     echo '    <title>' . $safeTitle . ' — Админ-панель</title>' . PHP_EOL;
+    echo '    <link rel="icon" href="/img/1Logo.svg" type="image/svg+xml">' . PHP_EOL;
     echo '    <link rel="stylesheet" href="' . $safeStylesheetHref . '">' . PHP_EOL;
     echo '</head>' . PHP_EOL;
     echo '<body class="' . $safeBodyClass . '">' . PHP_EOL;
