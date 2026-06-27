@@ -16,6 +16,20 @@ function pkks_admin_security_status_class(string $status): string
     return strtolower(str_replace('_', '-', $status));
 }
 
+function pkks_admin_security_status_label(string $status): string
+{
+    switch ($status) {
+        case 'PASS':
+            return 'Работает';
+        case 'WARNING':
+            return 'Требует проверки';
+        case 'ACTION_REQUIRED':
+            return 'Нужно выполнить';
+        default:
+            return 'Неизвестно';
+    }
+}
+
 function pkks_admin_security_access_label(bool $exists, bool $writable): string
 {
     if (!$exists) {
@@ -37,11 +51,12 @@ function pkks_admin_security_render_card(array $card): void
     $description = is_string($card['description'] ?? null) ? $card['description'] : '';
     $details = isset($card['details']) && is_array($card['details']) ? $card['details'] : [];
     $statusClass = pkks_admin_security_status_class($status);
+    $statusLabel = pkks_admin_security_status_label($status);
 
     echo '        <article class="pkks-admin-security-card pkks-admin-security-card--' . pkks_admin_escape($statusClass) . '">' . PHP_EOL;
     echo '            <header class="pkks-admin-security-card__header">' . PHP_EOL;
     echo '                <h2>' . pkks_admin_escape($title) . '</h2>' . PHP_EOL;
-    echo '                <span class="pkks-admin-security-badge pkks-admin-security-badge--' . pkks_admin_escape($statusClass) . '">' . pkks_admin_escape($status) . '</span>' . PHP_EOL;
+    echo '                <span class="pkks-admin-security-badge pkks-admin-security-badge--' . pkks_admin_escape($statusClass) . '">' . pkks_admin_escape($statusLabel) . '</span>' . PHP_EOL;
     echo '            </header>' . PHP_EOL;
     echo '            <p>' . pkks_admin_escape($description) . '</p>' . PHP_EOL;
 
@@ -68,39 +83,39 @@ $currentLogin = pkks_admin_current_login() ?? 'администратор';
 $statusCards = [];
 
 $statusCards[] = [
-    'title' => 'Авторизация',
+    'title' => 'Вход в админку',
     'status' => 'PASS',
-    'description' => 'Доступ к админ-панели закрыт авторизацией.',
-    'details' => ['Страница доступна только после активной admin-сессии.'],
+    'description' => 'Админ-панель закрыта логином и паролем.',
+    'details' => ['Без успешного входа страницы управления недоступны.'],
 ];
 
 $statusCards[] = [
-    'title' => 'CSRF',
+    'title' => 'Защита форм',
     'status' => 'PASS',
-    'description' => 'Save/upload endpoints используют CSRF-проверку.',
-    'details' => ['Статус статический: POST-проверки с этой страницы не выполняются.'],
+    'description' => 'Формы сохранения защищены от поддельной отправки.',
+    'details' => ['Проверка выполняется автоматически при сохранении данных.'],
 ];
 
 $statusCards[] = [
-    'title' => 'Save/upload endpoints',
+    'title' => 'Сохранение данных и загрузка файлов',
     'status' => 'PASS',
-    'description' => 'Endpoints работают через POST и требуют авторизацию.',
+    'description' => 'Данные можно менять только через защищённые разделы админ-панели.',
     'details' => [
-        '/admin/api/save-team.php',
-        '/admin/api/upload-team-photo.php',
-        '/admin/api/save-services.php',
-        '/admin/api/save-prices.php',
+        'Сотрудники',
+        'Фото сотрудников',
+        'Услуги',
+        'Цены',
     ],
 ];
 
 $rateLimitExists = is_file(pkks_admin_security_project_path('admin/includes/rate-limit.php'));
 $statusCards[] = [
-    'title' => 'Rate-limit входа',
+    'title' => 'Защита от подбора пароля',
     'status' => $rateLimitExists ? 'PASS' : 'WARNING',
     'description' => $rateLimitExists
-        ? 'Файл ограничения попыток входа подключён в MVP.'
-        : 'Файл ограничения попыток входа не найден.',
-    'details' => ['admin/includes/rate-limit.php: ' . pkks_admin_security_file_label('admin/includes/rate-limit.php')],
+        ? 'Попытки входа ограничиваются, чтобы пароль нельзя было бесконечно подбирать.'
+        : 'Ограничение попыток входа требует проверки.',
+    'details' => [$rateLimitExists ? 'Ограничение попыток входа подключено.' : 'Ограничение попыток входа не найдено.'],
 ];
 
 $auditLogsDir = pkks_admin_security_project_path('storage/logs');
@@ -108,22 +123,25 @@ $auditLogsExists = is_dir($auditLogsDir);
 $auditLogsWritable = $auditLogsExists && is_writable($auditLogsDir);
 $auditLogStatus = !$auditLogsExists ? 'ACTION_REQUIRED' : ($auditLogsWritable ? 'PASS' : 'WARNING');
 $statusCards[] = [
-    'title' => 'Audit log',
+    'title' => 'Журнал действий',
     'status' => $auditLogStatus,
-    'description' => 'Директория журнала проверена без чтения записей.',
-    'details' => ['storage/logs/: ' . pkks_admin_security_access_label($auditLogsExists, $auditLogsWritable)],
+    'description' => 'Важные действия в админке записываются в служебный журнал.',
+    'details' => [
+        'Журнал не показывается на этой странице и не раскрывает содержимое изменений.',
+        'Служебный журнал: ' . pkks_admin_security_access_label($auditLogsExists, $auditLogsWritable),
+    ],
 ];
 
 $backupDirs = [
-    'data/backups/team/',
-    'data/backups/services/',
-    'data/backups/prices/',
+    'Сотрудники' => 'data/backups/team/',
+    'Услуги' => 'data/backups/services/',
+    'Цены' => 'data/backups/prices/',
 ];
 $missingBackupDirs = [];
 $blockedBackupDirs = [];
 $backupDetails = [];
 
-foreach ($backupDirs as $backupDir) {
+foreach ($backupDirs as $backupLabel => $backupDir) {
     $backupPath = pkks_admin_security_project_path($backupDir);
     $backupExists = is_dir($backupPath);
     $backupWritable = $backupExists && is_writable($backupPath);
@@ -134,14 +152,16 @@ foreach ($backupDirs as $backupDir) {
         $blockedBackupDirs[] = $backupDir;
     }
 
-    $backupDetails[] = $backupDir . ': ' . pkks_admin_security_access_label($backupExists, $backupWritable);
+    $backupDetails[] = $backupLabel . ': ' . pkks_admin_security_access_label($backupExists, $backupWritable);
 }
+
+$backupDetails[] = 'Это помогает восстановить данные, если при редактировании была допущена ошибка.';
 
 $backupStatus = $missingBackupDirs !== [] ? 'ACTION_REQUIRED' : ($blockedBackupDirs !== [] ? 'WARNING' : 'PASS');
 $statusCards[] = [
-    'title' => 'JSON backups',
+    'title' => 'Резервные копии данных',
     'status' => $backupStatus,
-    'description' => 'Проверены только директории резервных копий, без списка backup-файлов.',
+    'description' => 'Перед сохранением создаётся резервная копия данных.',
     'details' => $backupDetails,
 ];
 
@@ -161,59 +181,74 @@ if (!$uploadDirExists || !$getimagesizeAvailable) {
 }
 
 $statusCards[] = [
-    'title' => 'Upload фото',
+    'title' => 'Проверка загружаемых фото',
     'status' => $uploadStatus,
-    'description' => 'Проверены директория фото и доступные PHP-проверки изображения без реальной загрузки.',
+    'description' => 'Фото сотрудников проверяются перед загрузкой.',
     'details' => [
-        'img/team/: ' . pkks_admin_security_access_label($uploadDirExists, $uploadDirWritable),
-        'img/team/.htaccess: ' . ($uploadHtaccessExists ? 'найден' : 'отсутствует'),
-        'getimagesize: ' . ($getimagesizeAvailable ? 'доступен' : 'недоступен'),
-        'fileinfo/finfo_open: ' . ($fileinfoAvailable ? 'доступен' : 'недоступен'),
+        'Разрешены: JPG, PNG, WEBP',
+        'Максимальный размер: 3 MB',
+        'SVG, PHP, HTML, JS и документы запрещены',
+        'Папка для фото: ' . pkks_admin_security_access_label($uploadDirExists, $uploadDirWritable),
+        'Защита папки фото: ' . ($uploadHtaccessExists ? 'найдена' : 'отсутствует'),
+        'Базовая проверка изображения: ' . ($getimagesizeAvailable ? 'доступна' : 'недоступна'),
+        'На локальной версии используется резервная проверка изображения.',
+        'На реальном хостинге нужно проверить загрузку тестового фото.',
     ],
 ];
 
 $gitignoreExists = is_file(pkks_admin_security_project_path('.gitignore'));
 $statusCards[] = [
-    'title' => 'Runtime/gitignore policy',
+    'title' => 'Служебные файлы проекта',
     'status' => 'PASS',
-    'description' => 'Runtime-файлы исключены из Git через .gitignore: config, logs, backups, uploaded photos.',
-    'details' => ['.gitignore: ' . ($gitignoreExists ? 'найден' : 'не найден локально')],
+    'description' => 'Логи, резервные копии, локальный пароль и загруженные фото не попадают в репозиторий.',
+    'details' => [
+        'Это снижает риск случайно отправить служебные файлы в Git.',
+        'Правило исключения служебных файлов: ' . ($gitignoreExists ? 'найдено' : 'не найдено локально'),
+    ],
 ];
 
 $hostingProtectionFiles = [
-    'config/.htaccess',
-    'storage/.htaccess',
-    'data/backups/.htaccess',
-    'includes/.htaccess',
-    'img/team/.htaccess',
+    'config' => 'config/.htaccess',
+    'storage' => 'storage/.htaccess',
+    'data/backups' => 'data/backups/.htaccess',
+    'includes' => 'includes/.htaccess',
+    'img/team — без просмотра списка файлов' => 'img/team/.htaccess',
 ];
 $missingHostingProtection = [];
 $hostingProtectionDetails = [];
 
-foreach ($hostingProtectionFiles as $protectionFile) {
+foreach ($hostingProtectionFiles as $protectionLabel => $protectionFile) {
     $exists = is_file(pkks_admin_security_project_path($protectionFile));
 
     if (!$exists) {
         $missingHostingProtection[] = $protectionFile;
     }
 
-    $hostingProtectionDetails[] = $protectionFile . ': ' . ($exists ? 'найден' : 'отсутствует');
+    $hostingProtectionDetails[] = $protectionLabel . ': ' . ($exists ? 'проверено локально' : 'требует настройки');
 }
 
+$hostingProtectionDetails[] = 'На локальной версии проверена структура. На реальном хостинге нужно подтвердить, что правила защиты работают.';
+
 $statusCards[] = [
-    'title' => 'Hosting protection',
+    'title' => 'Защита папок на хостинге',
     'status' => $missingHostingProtection === [] ? 'WARNING' : 'ACTION_REQUIRED',
     'description' => $missingHostingProtection === []
-        ? '.htaccess-файлы найдены, но требуют проверки на целевом хостинге.'
-        : 'Один или несколько защитных .htaccess отсутствуют.',
+        ? 'Служебные папки должны быть закрыты от прямого доступа из браузера.'
+        : 'Одна или несколько служебных папок требуют настройки защиты.',
     'details' => $hostingProtectionDetails,
 ];
 
 $statusCards[] = [
-    'title' => 'Production dry-run',
+    'title' => 'Проверка на реальном хостинге',
     'status' => 'ACTION_REQUIRED',
-    'description' => 'Локальный MVP проверен. Целевой хостинг ещё требует dry-run: права записи, .htaccess, upload, backup, audit.',
-    'details' => ['Production-проверки с этой страницы не запускаются.'],
+    'description' => 'Локальная версия проверена. Перед передачей сайта нужно выполнить тест на хостинге.',
+    'details' => [
+        'Права записи',
+        'Защита служебных папок',
+        'Загрузка фото',
+        'Создание резервных копий',
+        'Запись журнала действий',
+    ],
 ];
 
 pkks_admin_render_header('Безопасность', ['body_class' => 'pkks-admin-security-page']);
@@ -223,12 +258,21 @@ pkks_admin_render_topbar('Безопасность', 'Вход выполнен:
         <div class="pkks-admin-dashboard-intro__copy">
             <p class="pkks-admin-eyebrow">Только просмотр</p>
             <h2>Безопасность</h2>
-            <p>Панель показывает состояние защитных механизмов MVP без изменения настроек, чтения секретов, логов и runtime-файлов.</p>
+            <p>Этот раздел показывает, готова ли админ-панель к безопасной работе.</p>
+            <p>Здесь ничего не нужно настраивать каждый день. Основная работа с сайтом выполняется в разделах «Сотрудники», «Услуги» и «Цены».</p>
+            <p>Страница нужна для технической проверки перед передачей сайта и установкой на хостинг.</p>
         </div>
         <div class="pkks-admin-dashboard-actions" aria-label="Навигация статуса безопасности">
             <a class="pkks-admin-button pkks-admin-button--secondary" href="/admin/index.php">Назад в админ-панель</a>
             <a class="pkks-admin-button pkks-admin-button--primary" href="/">Вернуться на сайт</a>
         </div>
+    </section>
+
+    <section class="pkks-admin-notice pkks-admin-security-help" aria-label="Как пользоваться разделом безопасности">
+        <h2>Как пользоваться этим разделом</h2>
+        <p>Если все основные пункты зелёные — админка готова к локальной работе.</p>
+        <p>Жёлтые пункты означают не ошибку, а то, что настройку нужно проверить на реальном хостинге.</p>
+        <p>Красный пункт означает действие, которое нужно выполнить перед передачей сайта заказчику.</p>
     </section>
 
     <section class="pkks-admin-security-grid" aria-label="Статусы безопасности админ-панели">

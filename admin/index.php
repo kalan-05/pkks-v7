@@ -58,7 +58,7 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
             'label' => 'Открыть редактор',
             'disabled' => false,
         ]);
-        pkks_admin_render_panel_card('Безопасность', 'Статус защиты, журналирования, резервных копий и production-проверок.', [
+        pkks_admin_render_panel_card('Безопасность', 'Проверка защиты админки, резервных копий и готовности к хостингу.', [
             'href' => '/admin/security.php',
             'label' => 'Открыть статус',
             'disabled' => false,
