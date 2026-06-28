@@ -1,4 +1,8 @@
-/* 006D: header rebuilt by actual DOM - logo, menu, desktop phone, burger. */
+/* 033A: header menu uses full-screen tablet/mobile overlay with locked body scroll. */
+body.is-menu-open {
+  overflow: hidden;
+}
+
 #header.header {
   position: fixed;
   inset: 0 0 auto 0;
@@ -106,7 +110,7 @@
   display: none;
 }
 
-@media (max-width: 1200px) and (min-width: 993px) {
+@media (max-width: 1200px) and (min-width: 1124px) {
   #header .container.header__container {
     grid-template-columns: minmax(220px, 1fr) auto minmax(170px, 1fr);
     gap: 24px;
@@ -130,14 +134,22 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1123px) {
   #header.header {
     height: 72px;
     min-height: 72px;
   }
 
+  #header.header.open {
+    transform: translate3d(0, 0, 0);
+  }
+
   #header.header.is-header-hidden {
     transform: translate3d(0, -72px, 0);
+  }
+
+  #header.header.open.is-header-hidden {
+    transform: translate3d(0, 0, 0);
   }
 
   #header .container.header__container {
@@ -145,6 +157,8 @@
     min-height: 72px;
     grid-template-columns: minmax(0, 1fr) 48px;
     gap: 16px;
+    position: relative;
+    z-index: 2;
   }
 
   #header .logo {
@@ -172,6 +186,7 @@
     border: 0;
     background: transparent;
     cursor: pointer;
+    z-index: 3;
   }
 
   #header .header__burger-btn span {
@@ -211,43 +226,60 @@
 
   #header .menu {
     position: fixed;
-    top: 72px;
-    right: 0;
-    width: min(360px, 100vw);
-    min-height: calc(100vh - 72px);
-    padding: 24px 20px;
+    inset: 0;
+    z-index: 1;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: calc(72px + clamp(36px, 8vh, 76px)) clamp(24px, 7vw, 72px) 40px;
     background: var(--fon_dark);
-    transform: translateX(100%);
     visibility: hidden;
-    transition: transform 240ms ease, visibility 240ms ease;
+    pointer-events: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   #header.header.open .menu {
-    transform: translateX(0);
     visibility: visible;
+    pointer-events: auto;
   }
 
   #header .menu__list {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
+    align-items: center;
+    width: min(100%, 520px);
+    gap: clamp(10px, 2vh, 18px);
+  }
+
+  #header .menu__item {
+    width: 100%;
   }
 
   #header .menu__link,
   #header .menu__link:link,
   #header .menu__link:visited {
     display: block;
+    width: 100%;
     padding: 14px 0;
     color: #ffffff !important;
-    font-size: 20px;
+    font-size: clamp(23px, 4vw, 34px);
     font-weight: 700;
+    line-height: 1.12;
+    text-align: center;
   }
 
   #header .menu__item--phone {
     display: block;
-    margin-top: 12px;
-    padding-top: 12px;
+    width: 100%;
+    margin-top: clamp(14px, 3vh, 28px);
+    padding-top: clamp(18px, 3vh, 30px);
     border-top: 1px solid rgba(255, 255, 255, 0.18);
   }
 
@@ -255,6 +287,7 @@
   #header .menu__phone-link:link,
   #header .menu__phone-link:visited {
     color: #ffffff !important;
+    font-size: clamp(21px, 3.5vw, 30px);
   }
 }
 
@@ -264,12 +297,30 @@
   }
 
   #header .menu {
-    width: 100vw;
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  #header .menu__link,
+  #header .menu__link:link,
+  #header .menu__link:visited {
+    font-size: 24px;
   }
 }
 
 @media (max-width: 340px) {
   #header .logo h2 {
     font-size: 21px;
+  }
+
+  #header .menu {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  #header .menu__link,
+  #header .menu__link:link,
+  #header .menu__link:visited {
+    font-size: 22px;
   }
 }

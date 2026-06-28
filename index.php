@@ -44,7 +44,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/nav.css?v=006d2">
+  <link rel="stylesheet" href="css/nav.css?v=033a">
   <link rel="stylesheet" href="css/root.css?v=017a-r5">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/1_hero-section.css?v=008g">
@@ -100,7 +100,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
   </script>
 
   <!-- JS (defer) -->
-  <script defer src="js/menu.js"></script>
+  <script defer src="js/menu.js?v=033a"></script>
   <script defer src="js/header.js?v=006d2"></script>
   <script defer src="js/hero-parallax.js?v=008g"></script>
 </head>
@@ -114,7 +114,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
         <a href="./" class="logo">
           <h2>НАМ ДОВЕРЯЮТ</h2>
         </a>
-        <nav class="menu" id="menu" aria-label="Основная навигация">
+        <nav class="menu" id="menu" aria-label="Основная навигация" aria-hidden="true">
           <ul class="menu__list">
             <li class="menu__item">
               <a class="menu__link active" href="#link1" aria-current="page">О НАС
@@ -148,7 +148,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
           +7 (812) 430-28-84
         </a>
         <button class="header__burger-btn" id="burger" aria-controls="menu" aria-expanded="false"
-          aria-label="Переключить меню">
+          aria-label="Открыть меню">
           <span></span><span></span><span></span>
         </button>
       </div>

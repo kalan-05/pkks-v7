@@ -8,13 +8,82 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const navLinks = menu.querySelectorAll('.menu__link');
+  const tabletMenuMedia = window.matchMedia('(max-width: 1123px)');
+  const body = document.body;
+  const root = document.documentElement;
+  let lockedScrollY = 0;
+  let bodyLocked = false;
 
-  const closeMenu = () => {
+  const setMenuState = (isOpen) => {
+    burger.setAttribute('aria-expanded', String(isOpen));
+    burger.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    menu.setAttribute('aria-hidden', String(!isOpen));
+  };
+
+  const lockBodyScroll = () => {
+    if (bodyLocked) {
+      return;
+    }
+
+    lockedScrollY = window.scrollY || root.scrollTop || 0;
+    const scrollbarWidth = Math.max(0, window.innerWidth - root.clientWidth);
+
+    body.classList.add('is-menu-open');
+    body.style.position = 'fixed';
+    body.style.top = `-${lockedScrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    bodyLocked = true;
+  };
+
+  const unlockBodyScroll = () => {
+    if (!bodyLocked) {
+      return;
+    }
+
+    const restoreScrollY = lockedScrollY;
+    body.classList.remove('is-menu-open');
+    body.style.position = '';
+    body.style.top = '';
+    body.style.left = '';
+    body.style.right = '';
+    body.style.width = '';
+    body.style.overflow = '';
+    body.style.paddingRight = '';
+    bodyLocked = false;
+
+    window.scrollTo(0, restoreScrollY);
+  };
+
+  const openMenu = () => {
+    if (header.classList.contains('open')) {
+      return;
+    }
+
+    header.classList.remove('is-header-hidden');
+    header.classList.add('open');
+    setMenuState(true);
+    lockBodyScroll();
+    burger.focus({ preventScroll: true });
+  };
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
     if (!header.classList.contains('open')) {
       return;
     }
     header.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
+    setMenuState(false);
+    unlockBodyScroll();
+
+    if (restoreFocus) {
+      burger.focus({ preventScroll: true });
+    }
   };
 
   const setCurrentLink = (current) => {
@@ -34,11 +103,15 @@ document.addEventListener('DOMContentLoaded', () => {
     defaultActive.setAttribute('aria-current', 'page');
   }
 
-  burger.setAttribute('aria-expanded', 'false');
+  setMenuState(false);
 
   burger.addEventListener('click', () => {
-    const isOpen = header.classList.toggle('open');
-    burger.setAttribute('aria-expanded', String(isOpen));
+    if (header.classList.contains('open')) {
+      closeMenu();
+      return;
+    }
+
+    openMenu();
   });
 
   // Закрытие при отмене жеста (некоторые тач-устройства)
@@ -61,6 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
   menu.addEventListener('click', (event) => {
     const link = event.target instanceof HTMLElement ? event.target.closest('.menu__link') : null;
     if (link) {
+      if (link.classList.contains('menu__phone-link')) {
+        closeMenu({ restoreFocus: false });
+        return;
+      }
+
       setCurrentLink(link);
       closeMenu();
     }
@@ -72,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const focusedLink = document.activeElement instanceof HTMLElement
           ? document.activeElement.closest('.menu__link')
           : null;
-      if (focusedLink) {
+      if (focusedLink && !focusedLink.classList.contains('menu__phone-link')) {
         setCurrentLink(focusedLink);
       }
     }
@@ -94,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       closeMenu();
-      burger.focus();
     }
   });
 
@@ -107,4 +184,16 @@ document.addEventListener('DOMContentLoaded', () => {
       setCurrentLink(activeByHash);
     }
   });
+
+  const closeOnDesktop = () => {
+    if (!tabletMenuMedia.matches) {
+      closeMenu({ restoreFocus: false });
+    }
+  };
+
+  if (typeof tabletMenuMedia.addEventListener === 'function') {
+    tabletMenuMedia.addEventListener('change', closeOnDesktop);
+  } else if (typeof tabletMenuMedia.addListener === 'function') {
+    tabletMenuMedia.addListener(closeOnDesktop);
+  }
 });
