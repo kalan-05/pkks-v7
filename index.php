@@ -32,7 +32,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
   <meta property="og:title" content="Правовая контора К. Сопрачева — юридические услуги в Санкт-Петербурге">
   <meta property="og:description"
     content="Юридическое сопровождение бизнеса и граждан. Договоры, суды, недвижимость, налоги. Санкт-Петербург. Тел.: +7 (812) 430-28-84">
-  <meta property="og:image" content="https://pkks.spb.ru/img/og-cover.png">
+  <meta property="og:image" content="/img/og-cover.png">
   <meta property="og:url" content="https://pkks.spb.ru/">
 
   <!-- TWITTER -->
@@ -40,7 +40,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
   <meta name="twitter:title" content="Правовая контора К. Сопрачева — юридические услуги в Санкт-Петербурге">
   <meta name="twitter:description"
     content="Юридическое сопровождение бизнеса и граждан. Договоры, суды, недвижимость, налоги. Санкт-Петербург. Тел.: +7 (812) 430-28-84">
-  <meta name="twitter:image" content="https://pkks.spb.ru/img/og-cover.png">
+  <meta name="twitter:image" content="/img/og-cover.png">
 
   <!-- CSS -->
   <link rel="stylesheet" href="css/normalize.css">
@@ -72,7 +72,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
       "url": "https://pkks.spb.ru/",
       "telephone": "+7-812-430-28-84",
       "email": "soprachev@pkks.spb.ru",
-      "image": "https://pkks.spb.ru/img/og-cover.png",
+      "image": "/img/og-cover.png",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Санкт-Петербург",
@@ -92,10 +92,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
         "opens": "10:00",
         "closes": "18:00"
       },
-      "priceRange": "₽₽",
-      "sameAs": [
-        "https://dev.polymap.ru/pkks"
-      ]
+      "priceRange": "₽₽"
     }
   </script>
 
@@ -369,9 +366,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
             <div class="contact-row">
               <div class="contact-column">
                 <div class="contacts-content">
-                  <a class="address" href="https://dev.polymap.ru/pkks" target="_blank"
-                    rel="noopener noreferrer">АДРЕС
-                  </a>
+                  <span class="address">АДРЕС</span>
                   <ul class="contacts-list">
                     <li>197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</li>
                     <li>
@@ -389,11 +384,9 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
                 </div>
               </div>
               <div class="imgEntrance">
-                <a href="https://dev.polymap.ru/pkks" target="_blank" rel="noopener noreferrer">
-                  <img src="img/offic.webp" title="Офис ООО “Правовая контора К. Сопрачева”"
-                    alt="Вход ООО “Правовая контора К. Сопрачева”" loading="lazy" decoding="async" width="1350"
-                    height="1060">
-                </a>
+                <img src="img/offic.webp" title="Офис ООО “Правовая контора К. Сопрачева”"
+                  alt="Вход ООО “Правовая контора К. Сопрачева”" loading="lazy" decoding="async" width="1350"
+                  height="1060">
               </div>
             </div>
           </div>

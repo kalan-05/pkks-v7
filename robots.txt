@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 Sitemap: https://pkks.spb.ru/sitemap.xml
 Host: pkks.spb.ru

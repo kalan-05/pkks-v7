@@ -1,1 +1,5 @@
 DirectoryIndex index.php index.html
+
+<FilesMatch "(^\.env(\..*)?$|^debug\.log$|.*\.(log|sql|bak|backup|pem|key|p12|pfx|cert|secret)$)">
+    Require all denied
+</FilesMatch>

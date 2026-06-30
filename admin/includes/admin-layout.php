@@ -16,6 +16,10 @@ function pkks_admin_stylesheet_href(): string
 
 function pkks_admin_render_header(string $title, array $options = []): void
 {
+    if (!headers_sent()) {
+        header('X-Robots-Tag: noindex, nofollow, noarchive');
+    }
+
     $safeTitle = pkks_admin_escape($title);
     $bodyClass = trim('pkks-admin-page ' . (string)($options['body_class'] ?? ''));
     $safeBodyClass = pkks_admin_escape($bodyClass);
@@ -26,6 +30,7 @@ function pkks_admin_render_header(string $title, array $options = []): void
     echo '<head>' . PHP_EOL;
     echo '    <meta charset="utf-8">' . PHP_EOL;
     echo '    <meta name="viewport" content="width=device-width, initial-scale=1">' . PHP_EOL;
+    echo '    <meta name="robots" content="noindex, nofollow, noarchive">' . PHP_EOL;
     echo '    <title>' . $safeTitle . ' — Админ-панель</title>' . PHP_EOL;
     echo '    <link rel="icon" href="/img/1Logo.svg" type="image/svg+xml">' . PHP_EOL;
     echo '    <link rel="stylesheet" href="' . $safeStylesheetHref . '">' . PHP_EOL;

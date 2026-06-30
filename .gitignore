@@ -47,6 +47,7 @@ test-results/
 .nyc_output/
 
 # Runtime and temporary files
+/debug.log
 tmp/
 temp/
 .tmp/
