@@ -92,8 +92,11 @@
 
   <!-- JS (defer) -->
   <script defer src="js/menu.js?v=033a"></script>
-  <script defer src="js/header.js?v=006d2"></script>
-  <script defer src="js/hero-parallax.js?v=008g"></script>
+  <script defer src="vendor/gsap/gsap.min.js?v=3.15.0"></script>
+  <script defer src="vendor/gsap/ScrollTrigger.min.js?v=3.15.0"></script>
+  <script defer src="vendor/gsap/ScrollSmoother.min.js?v=3.15.0"></script>
+  <script defer src="js/gsap-scroll-smoother.js?v=036e"></script>
+  <script defer src="js/header.js?v=036a"></script>
 </head>
 
 <body>
@@ -145,27 +148,29 @@
       </div>
     </header>
 
-    <main id="main-content" tabindex="-1">
-      <div class="hero-parallax-scene" data-hero-parallax-scene>
-        <section class="hero-section" data-hero-sticky>
-          <div class="hero-section__container container">
-            <div class="hero-section__content" data-hero-depth>
-              <div class="hero-section__title">
-                <h1>
-                  <span class="hero-section__headline">ПРАВОВАЯ КОНТОРА</span>
-                  <span class="hero-section__headline">К.СОПРАЧЕВА</span>
-                </h1>
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main-content" tabindex="-1">
+          <div class="hero-parallax-scene" data-hero-parallax-scene>
+            <section class="hero-section" data-hero-sticky>
+              <div class="hero-section__container container">
+                <div class="hero-section__content" data-hero-depth>
+                  <div class="hero-section__title">
+                    <h1>
+                      <span class="hero-section__headline">ПРАВОВАЯ КОНТОРА</span>
+                      <span class="hero-section__headline">К.СОПРАЧЕВА</span>
+                    </h1>
+                  </div>
+                  <div class="text-hero-section">
+                    <h2>
+                      <span class="hero-section__subtitle">НАШИ УСЛУГИ ПОСТОЯННЫ,</span>
+                      <span class="hero-section__subtitle">ПОТОМУ ЧТО НАДЕЖНЫ</span>
+                    </h2>
+                  </div>
+                </div>
               </div>
-              <div class="text-hero-section">
-                <h2>
-                  <span class="hero-section__subtitle">НАШИ УСЛУГИ ПОСТОЯННЫ,</span>
-                  <span class="hero-section__subtitle">ПОТОМУ ЧТО НАДЕЖНЫ</span>
-                </h2>
-              </div>
-            </div>
+            </section>
           </div>
-        </section>
-      </div>
 
       <div class="site-light-overlap" data-site-light-overlap>
         <section class="section-second-about container" data-about-overlap>
@@ -588,40 +593,42 @@
           width="100%" height="500" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       </div>
-    </main>
+        </main>
 
-    <footer class="site-footer sectionEight-copyright" role="contentinfo">
-      <div class="site-footer__container container">
-        <div class="site-footer__brand">
-          <p class="site-footer__name">Правовая контора К. Сопрачева</p>
-          <p class="site-footer__description">Юридические услуги в Санкт-Петербурге</p>
-        </div>
+        <footer class="site-footer sectionEight-copyright" role="contentinfo">
+          <div class="site-footer__container container">
+            <div class="site-footer__brand">
+              <p class="site-footer__name">Правовая контора К. Сопрачева</p>
+              <p class="site-footer__description">Юридические услуги в Санкт-Петербурге</p>
+            </div>
 
-        <nav class="site-footer__nav" aria-label="Навигация в подвале">
-          <p class="site-footer__heading">Навигация</p>
-          <a href="#link1">О нас</a>
-          <a href="#link2">Услуги</a>
-          <a href="#link3">Цена</a>
-          <a href="#link4">Реквизиты</a>
-          <a href="#link5">Контакты</a>
-        </nav>
+            <nav class="site-footer__nav" aria-label="Навигация в подвале">
+              <p class="site-footer__heading">Навигация</p>
+              <a href="#link1">О нас</a>
+              <a href="#link2">Услуги</a>
+              <a href="#link3">Цена</a>
+              <a href="#link4">Реквизиты</a>
+              <a href="#link5">Контакты</a>
+            </nav>
 
-        <div class="site-footer__contacts">
-          <p class="site-footer__heading">Контакты</p>
-          <a href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84</a>
-          <a href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru</a>
-          <span>Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</span>
-        </div>
+            <div class="site-footer__contacts">
+              <p class="site-footer__heading">Контакты</p>
+              <a href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84</a>
+              <a href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru</a>
+              <span>Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115, к.&nbsp;1, пом.&nbsp;24Н</span>
+            </div>
 
-        <div class="site-footer__bottom">
-          <p>Copyright © 2024 ООО «Правовая контора К. Сопрачева»</p>
-          <a class="site-footer__developer" href="https://kavweb.ru/" target="_blank" rel="noopener noreferrer">
-            <span>Разработчик —</span>
-            <img class="abk" src="img/kavLogoL.webp" title="Разработчик - KAVWEB" alt="KAVWEB" width="40" height="24">
-          </a>
-        </div>
+            <div class="site-footer__bottom">
+              <p>Copyright © 2024 ООО «Правовая контора К. Сопрачева»</p>
+              <a class="site-footer__developer" href="https://kavweb.ru/" target="_blank" rel="noopener noreferrer">
+                <span>Разработчик —</span>
+                <img class="abk" src="img/kavLogoL.webp" title="Разработчик - KAVWEB" alt="KAVWEB" width="40" height="24">
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
-    </footer>
+    </div>
   </div>
 </body>
 

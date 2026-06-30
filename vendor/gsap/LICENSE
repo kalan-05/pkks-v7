@@ -1,0 +1,9 @@
+GSAP 3.15.0
+
+Source: official npm package gsap@3.15.0.
+Package license field: Standard 'no charge' license: https://gsap.com/standard-license.
+
+The npm tarball used for this vendor copy did not include a standalone LICENSE file.
+This local file records the license declared by the official package metadata.
+
+Copyright (c) 2008-2026, GreenSock. All rights reserved.
