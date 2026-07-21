@@ -1,1 +1,12 @@
 Options -Indexes
+
+# Запрещаем HTTP-доступ к исполняемым файлам в публичном каталоге загрузок.
+<FilesMatch "(?i)\.(?:php|php3|php4|php5|php7|php8|phtml|phar)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</FilesMatch>
