@@ -14,6 +14,18 @@
   z-index: 2;
 }
 
+/* Перекрывает субпиксельный шов слоёв при transform ScrollSmoother. */
+.contacts-payment::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--fon_light);
+  pointer-events: none;
+}
+
 .contacts-payment__container {
   position: static;
   margin-top: 0;
