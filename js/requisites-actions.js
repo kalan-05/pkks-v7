@@ -3,6 +3,11 @@
 
   const DOWNLOAD_FILE_NAME = 'rekvizity-pravovaya-kontora-k-sopracheva.txt';
   const COPY_ERROR_MESSAGE = 'Не удалось скопировать. Выделите реквизиты вручную.';
+  const SUCCESS_FEEDBACK_TIMEOUT = 3000;
+  const ERROR_FEEDBACK_TIMEOUT = 6000;
+  const SCROLL_DISMISS_THRESHOLD = 20;
+  const SCROLL_DISMISS_GRACE_PERIOD = 750;
+  const feedbackStates = new WeakMap();
 
   const normalizeText = (value) => value.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -63,15 +68,53 @@
     ].join('\n');
   };
 
-  const setStatus = (card, message, state) => {
+  const getFeedbackState = (card) => {
+    if (!feedbackStates.has(card)) {
+      feedbackStates.set(card, { timerId: null, scrollPosition: window.scrollY, scrollReadyAt: 0 });
+    }
+
+    return feedbackStates.get(card);
+  };
+
+  const clearFeedbackTimer = (card) => {
+    const feedbackState = getFeedbackState(card);
+
+    if (feedbackState.timerId !== null) {
+      window.clearTimeout(feedbackState.timerId);
+      feedbackState.timerId = null;
+    }
+  };
+
+  const hideFeedback = (card) => {
+    const status = card.querySelector('[data-requisites-status]');
+
+    clearFeedbackTimer(card);
+
+    if (!status || !status.textContent) {
+      return;
+    }
+
+    status.textContent = '';
+    delete status.dataset.state;
+  };
+
+  const showFeedback = (card, message, state) => {
     const status = card.querySelector('[data-requisites-status]');
 
     if (!status) {
       return;
     }
 
+    clearFeedbackTimer(card);
     status.textContent = message;
     status.dataset.state = state;
+
+    const feedbackState = getFeedbackState(card);
+    const timeout = state === 'error' ? ERROR_FEEDBACK_TIMEOUT : SUCCESS_FEEDBACK_TIMEOUT;
+
+    feedbackState.scrollPosition = window.scrollY;
+    feedbackState.scrollReadyAt = Date.now() + SCROLL_DISMISS_GRACE_PERIOD;
+    feedbackState.timerId = window.setTimeout(() => hideFeedback(card), timeout);
   };
 
   const copyWithFallback = (text, trigger) => {
@@ -131,6 +174,32 @@
 
     actions.hidden = false;
 
+    // Слушатели создаются один раз для карточки и скрывают только активный feedback.
+    window.addEventListener('scroll', () => {
+      const feedbackState = getFeedbackState(card);
+
+      if (Date.now() < feedbackState.scrollReadyAt) {
+        feedbackState.scrollPosition = window.scrollY;
+        return;
+      }
+
+      if (Math.abs(window.scrollY - feedbackState.scrollPosition) >= SCROLL_DISMISS_THRESHOLD) {
+        hideFeedback(card);
+      }
+    }, { passive: true });
+
+    document.addEventListener('pointerdown', (event) => {
+      if (!card.contains(event.target)) {
+        hideFeedback(card);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        hideFeedback(card);
+      }
+    });
+
     copyButton.addEventListener('click', async () => {
       try {
         const requisitesText = createRequisitesText(card);
@@ -140,18 +209,18 @@
           throw new Error('Fallback копирования вернул неуспешный результат');
         }
 
-        setStatus(card, 'Реквизиты скопированы', 'success');
+        showFeedback(card, 'Реквизиты скопированы', 'success');
       } catch (error) {
-        setStatus(card, COPY_ERROR_MESSAGE, 'error');
+        showFeedback(card, COPY_ERROR_MESSAGE, 'error');
       }
     });
 
     downloadButton.addEventListener('click', () => {
       try {
         downloadText(createRequisitesText(card));
-        setStatus(card, 'Файл с реквизитами скачивается', 'success');
+        showFeedback(card, 'Файл с реквизитами скачивается', 'success');
       } catch (error) {
-        setStatus(card, 'Не удалось подготовить файл с реквизитами.', 'error');
+        showFeedback(card, 'Не удалось подготовить файл с реквизитами.', 'error');
       }
     });
   });
