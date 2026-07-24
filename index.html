@@ -43,7 +43,7 @@
   <link rel="stylesheet" href="css/3_history.css?v=017a-r5">
   <link rel="stylesheet" href="css/4_services.css?v=017a-r5">
   <link rel="stylesheet" href="css/5_price.css?v=017a-r5">
-  <link rel="stylesheet" href="css/6_details.css?v=017a-r5">
+  <link rel="stylesheet" href="css/6_details.css?v=040a">
   <link rel="stylesheet" href="css/7_contacts.css?v=017a-r6">
 
   <!-- Fonts Preload -->
@@ -94,6 +94,7 @@
   <script defer src="vendor/gsap/ScrollSmoother.min.js?v=3.15.0"></script>
   <script defer src="js/gsap-scroll-smoother.js?v=036e"></script>
   <script defer src="js/header.js?v=036a"></script>
+  <script defer src="js/requisites-actions.js?v=040a-r9"></script>
 </head>
 
 <body>
@@ -503,28 +504,38 @@
         </div>
         <div class="section-six-details__content">
           <dl class="details-list">
-            <div class="details-list__group">
-              <dd><strong>Фирменное наименование:</strong>&nbsp;ООО «Правовая контора К.&nbsp;Сопрачева»</dd>
-              <dd><strong>Адрес:</strong>&nbsp;197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115,
+            <div class="details-list__group" data-requisites-card>
+              <dd data-requisites-field="company"><strong>Фирменное наименование:</strong>&nbsp;ООО «Правовая контора К.&nbsp;Сопрачева»</dd>
+              <dd data-requisites-field="address"><strong>Адрес:</strong>&nbsp;197374, г.&nbsp;Санкт-Петербург, ул.&nbsp;Савушкина, д.&nbsp;115,
                 к.&nbsp;1, пом.&nbsp;24Н, лит.&nbsp;А</dd>
               <dt></dt>
-              <dd><strong>Телефон:</strong>&nbsp;
+              <dd data-requisites-field="phone"><strong>Телефон:</strong>&nbsp;
                 <a class="details-list__link" href="tel:+78124302884">+7&nbsp;(812)&nbsp;430-28-84
                 </a>
                 (многоканальный)
               </dd>
-              <dd><strong>E-mail:</strong>&nbsp;
+              <dd data-requisites-field="email"><strong>E-mail:</strong>&nbsp;
                 <a class="details-list__link" href="mailto:soprachev@pkks.spb.ru">soprachev@pkks.spb.ru
                 </a>
               </dd>
-              <dd><strong>ОГРН</strong>&nbsp;1027800518888&nbsp;<strong>ИНН</strong>&nbsp;7801106330&nbsp;</dd>
-              <dd><strong>КПП</strong>&nbsp;781401001&nbsp;<strong>ОКПО</strong>&nbsp;35531946</dd>
-              <dd>р/с 40702810455000007540 в Северо-Западном банке ПАО «СБЕРБАНК», г.&nbsp;Санкт-Петербург,&nbsp;к/с
+              <dd data-requisites-field="registration"><strong>ОГРН</strong>&nbsp;1027800518888&nbsp;<strong>ИНН</strong>&nbsp;7801106330&nbsp;</dd>
+              <dd data-requisites-field="statistics"><strong>КПП</strong>&nbsp;781401001&nbsp;<strong>ОКПО</strong>&nbsp;35531946</dd>
+              <dd data-requisites-field="bank">р/с 40702810455000007540 в Северо-Западном банке ПАО «СБЕРБАНК», г.&nbsp;Санкт-Петербург,&nbsp;к/с
                 30101810500000000653, БИК 044030653</dd>
-              <dd><strong>Генеральный директор:</strong>&nbsp;Сопрачев Константин Александрович</dd>
-              <dd><strong>Система налогообложения:</strong>&nbsp;ООО «Правовая контора К.Сопрачева» является субъектом
+              <dd data-requisites-field="director"><strong>Генеральный директор:</strong>&nbsp;Сопрачев Константин Александрович</dd>
+              <dd data-requisites-field="taxation"><strong>Система налогообложения:</strong>&nbsp;ООО «Правовая контора К.Сопрачева» является субъектом
                 малого предпринимательства и применяет упрощенную систему налогообложения. В силу этого, наши услуги не
                 облагаются налогом на добавленную стоимость.</dd>
+              <!-- Действия используют только видимые реквизиты этой карточки. -->
+              <div class="details-list__actions" data-requisites-actions hidden>
+                <button class="details-list__action details-list__action--primary" type="button" data-requisites-copy>
+                  Скопировать реквизиты
+                </button>
+                <button class="details-list__action" type="button" data-requisites-download>
+                  Скачать реквизиты
+                </button>
+              </div>
+              <p class="details-list__status" data-requisites-status role="status" aria-live="polite"></p>
             </div>
           </dl>
         </div>
