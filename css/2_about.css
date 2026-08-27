@@ -179,34 +179,63 @@
 .section-second__container_kirill-left {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
+  align-self: stretch;
   width: 55%;
   gap: var(--pkks-title-to-content-compact);
 }
 
 .section-second__lebedev_education {
+  justify-content: center;
+  align-self: stretch;
   gap: var(--pkks-title-to-content-compact);
 }
 
 .team-qualification {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: auto;
-  max-width: 100%;
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: clamp(14px, 1.5vw, 18px);
+  row-gap: 4px;
+  width: min(100%, 360px);
   margin: 0;
   padding: clamp(14px, 1.5vw, 18px) clamp(20px, 2vw, 26px);
   background: var(--background_card);
   color: var(--text_color_fon_light);
   border: 1px solid rgba(16, 3, 20, 0.10);
   border-radius: var(--border-radius);
-  font-family: var(--font-primary);
-  font-size: var(--font-p);
-  font-weight: var(--font-weight_title-H2);
-  line-height: 1.3;
-  text-align: center;
+  text-align: left;
   box-shadow: none;
+}
+
+.team-qualification::before {
+  grid-row: 1 / span 2;
+  width: 3px;
+  height: 100%;
+  content: '';
+  background: var(--text_color_fon_light);
+  border-radius: 999px;
+  opacity: 0.82;
+}
+
+.team-qualification__label {
+  grid-column: 2;
+  font-family: var(--font-primary);
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: var(--font-weight_title-H2);
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.68;
+}
+
+.team-qualification__value {
+  grid-column: 2;
+  font-family: var(--font-primary);
+  font-size: clamp(22px, 1.8vw, 28px);
+  font-weight: var(--font-weight_title-H2);
+  line-height: 1.2;
 }
 
 .kirill_card {
@@ -219,9 +248,81 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   /* width: 45%; */
+}
+
+.section-second__konstantin_rank,
+.section-second__kirill-rank,
+.section-second__lebedev_rank {
+  margin-top: clamp(14px, 1.2vw, 18px);
+}
+
+.section-second__konstantin_rank h4,
+.section-second__kirill-rank h4,
+.section-second__lebedev_rank h4 {
+  margin: 0;
+}
+
+@media (min-width: 991px) {
+  .section-second__kirill {
+    display: grid;
+    grid-template-columns: minmax(0, 55%) auto;
+    grid-template-rows: auto auto;
+    justify-content: center;
+    column-gap: clamp(24px, 4vw, 52px);
+    row-gap: 0;
+  }
+
+  .section-second__container_kirill-left {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .section-second__container_kirill-right {
+    display: contents;
+  }
+
+  .section-second__kirill-photo {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .section-second__kirill-rank {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .section-second__container--lebedev {
+    display: grid;
+    grid-template-columns: auto minmax(0, 55%);
+    grid-template-rows: auto auto;
+    justify-content: center;
+    column-gap: clamp(24px, 4vw, 52px);
+    row-gap: 0;
+  }
+
+  .section-second__img-lebedev {
+    display: contents;
+  }
+
+  .section-second__lebedev_photo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .section-second__lebedev_rank {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .section-second__lebedev_education {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
 }
 
 @media (max-width: 1030px) {
@@ -325,7 +426,7 @@
   .section-second__konstantin_rank h4,
   .section-second__kirill-rank h4,
   .section-second__lebedev_rank h4 {
-    margin-bottom: 10px;
+    margin: 0;
   }
 
   .section-second__img-konstantin,
@@ -344,8 +445,7 @@
   .section-second__konstantin_rank h4,
   .section-second__kirill-rank h4,
   .section-second__lebedev_rank h4 {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 0;
   }
 
   .kirill_card p {
@@ -355,8 +455,17 @@
 
 @media (max-width: 430px) {
   .team-qualification {
-    padding: 14px 18px;
-    font-size: var(--font_adapt_text-P);
+    width: min(100%, 280px);
+    padding: 15px 18px;
+    column-gap: 14px;
+  }
+
+  .team-qualification__label {
+    font-size: 11px;
+  }
+
+  .team-qualification__value {
+    font-size: 20px;
   }
 
   .section-second__title h2 {
@@ -403,15 +512,13 @@
   }
 
   .section-second__kirill-rank h4 {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 0;
   }
 }
 
 @media (max-width: 391px) {
   .section-second__kirill-photo img {
-    margin-top: 20px;
-    margin-bottom: 5px;
+    margin: 0;
   }
 }
 

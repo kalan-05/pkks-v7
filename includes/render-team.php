@@ -81,7 +81,7 @@ function pkks_render_team_qualification(array $education): string
         return '';
     }
 
-    return "\n            <div class=\"team-qualification\" aria-label=\"" . pkks_escape('Квалификация: ' . $qualification) . '">' . pkks_escape($qualification) . '</div>';
+    return "\n            <div class=\"team-qualification\" aria-label=\"" . pkks_escape('Квалификация: ' . $qualification) . "\">\n              <span class=\"team-qualification__label\">КВАЛИФИКАЦИЯ</span>\n              <span class=\"team-qualification__value\">" . pkks_escape($qualification) . "</span>\n            </div>";
 }
 
 function pkks_render_team_soprachev(array $employee): string
@@ -161,7 +161,7 @@ function pkks_render_team_lebedev(array $employee): string
 
     ob_start();
     ?>
-        <div class="section-second__container">
+        <div class="section-second__container section-second__container--lebedev">
           <div class="section-second__img-lebedev">
             <div class="section-second__lebedev_photo">
               <img src="<?= pkks_escape(pkks_employee_field($employee, 'photo')) ?>" title="<?= pkks_escape(pkks_employee_field($employee, 'photoTitle')) ?>"
