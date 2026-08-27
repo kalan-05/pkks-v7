@@ -48,7 +48,7 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
   <link rel="stylesheet" href="css/root.css?v=017a-r5">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/1_hero-section.css?v=008g">
-  <link rel="stylesheet" href="css/2_about.css?v=017a-r6">
+  <link rel="stylesheet" href="css/2_about.css?v=041a-r1">
   <link rel="stylesheet" href="css/3_history.css?v=017a-r5">
   <link rel="stylesheet" href="css/4_services.css?v=017a-r5">
   <link rel="stylesheet" href="css/5_price.css?v=017a-r5">

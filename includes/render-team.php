@@ -73,6 +73,17 @@ function pkks_render_position_spans(string $position): string
     return $html . "\n              ";
 }
 
+function pkks_render_team_qualification(array $education): string
+{
+    $qualification = pkks_string_value($education[0] ?? '');
+
+    if ($qualification === '') {
+        return '';
+    }
+
+    return "\n            <div class=\"team-qualification\" aria-label=\"" . pkks_escape('Квалификация: ' . $qualification) . '">' . pkks_escape($qualification) . '</div>';
+}
+
 function pkks_render_team_soprachev(array $employee): string
 {
     [$surname, $restName] = pkks_employee_name_parts(pkks_employee_field($employee, 'fullName'));
@@ -126,13 +137,7 @@ function pkks_render_team_rybakov(array $employee): string
                 <span><?= pkks_escape($restName) ?></span>
               </h3>
             </div>
-            <div class="section-second__kirill_card">
-<?php foreach ($education as $item) : ?>
-              <p class="kirill_card">
-                <?= pkks_escape(pkks_string_value($item)) ?>
-              </p>
-<?php endforeach; ?>
-            </div>
+<?= pkks_render_team_qualification($education) ?>
           </div>
           <div class="section-second__container_kirill-right">
             <div class="section-second__kirill-photo">
@@ -173,13 +178,7 @@ function pkks_render_team_lebedev(array $employee): string
                 <span class="lebedev_surname"><?= pkks_escape($restName) ?></span>
               </h3>
             </div>
-            <div class="section-second__lebedev_card">
-<?php foreach ($education as $itemIndex => $item) : ?>
-              <p class="lebedev_card_<?= $itemIndex + 1 ?>">
-                <?= pkks_escape(pkks_string_value($item)) ?>
-              </p>
-<?php endforeach; ?>
-            </div>
+<?= pkks_render_team_qualification($education) ?>
           </div>
         </div>
 <?php
