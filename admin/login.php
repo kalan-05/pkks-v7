@@ -15,6 +15,7 @@ if (!in_array($requestMethod, ['GET', 'HEAD', 'POST'], true)) {
 }
 
 $hasConfig = pkks_admin_has_config();
+$manualDelivery = $hasConfig && pkks_admin_auth_is_manual_delivery();
 $config = [];
 $loginError = null;
 $submittedLogin = '';
@@ -103,7 +104,7 @@ pkks_admin_render_header('Вход в админ-панель', ['body_class' =>
             }());
         </script>
 
-        <p class="pkks-admin-footnote"><a href="/admin/request-password-reset.php">Забыли пароль?</a></p>
+        <?php if (!$manualDelivery): ?><p class="pkks-admin-footnote"><a href="/admin/request-password-reset.php">Забыли пароль?</a></p><?php endif; ?>
     </section>
 <?php
 

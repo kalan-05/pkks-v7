@@ -5,22 +5,14 @@ declare(strict_types=1);
  * Этот шаблон не считывается сайтом и не содержит секретов.
  * Скопируйте его только во внешний закрытый runtime-каталог с правами 0600.
  * Путь передаётся через PKKS_ADMIN_RUNTIME_CONFIG и не попадает в Git.
- * Для local режима задайте PKKS_ADMIN_MAIL_TRANSPORT=local и путь к outbox.
- * Для smtp режима заполните подтверждённые параметры без отключения TLS-проверки.
+ * Для текущего no-mail запуска задайте PKKS_ADMIN_AUTH_DELIVERY_MODE=manual.
+ * SMTP-параметры добавляют только в отдельном согласованном почтовом контуре.
  */
 
 return [
     'PKKS_ADMIN_AUTH_DB_PATH' => '/absolute/private/path/accounts.sqlite',
-    'PKKS_ADMIN_OUTBOX_PATH' => '/absolute/private/path/outbox',
     'PKKS_ADMIN_BASE_URL' => 'https://example.invalid',
-    'PKKS_ADMIN_MAIL_TRANSPORT' => 'smtp',
-    'PKKS_ADMIN_SMTP_HOST' => 'smtp.example.invalid',
-    'PKKS_ADMIN_SMTP_PORT' => '587',
-    'PKKS_ADMIN_SMTP_ENCRYPTION' => 'starttls',
-    'PKKS_ADMIN_SMTP_AUTH' => '1',
-    'PKKS_ADMIN_SMTP_USERNAME' => 'replace-in-private-config',
-    'PKKS_ADMIN_SMTP_PASSWORD' => 'replace-in-private-config',
-    'PKKS_ADMIN_SMTP_FROM_ADDRESS' => 'no-reply@example.invalid',
-    'PKKS_ADMIN_SMTP_FROM_NAME' => 'Правовая контора К. Сопрачева',
-    'PKKS_ADMIN_SMTP_TIMEOUT' => '15',
+    'PKKS_ADMIN_AUTH_DELIVERY_MODE' => 'manual',
+    'PKKS_ADMIN_MAIL_TRANSPORT' => 'disabled',
+    'PKKS_ADMIN_PRIMARY_ADMIN_EMAIL' => 'primary@example.invalid',
 ];

@@ -91,6 +91,7 @@ function pkks_admin_auth_external_path(string $setting): string
 
 function pkks_admin_auth_db_path(): string { return pkks_admin_auth_external_path('PKKS_ADMIN_AUTH_DB_PATH'); }
 function pkks_admin_auth_outbox_path(): string { return pkks_admin_auth_external_path('PKKS_ADMIN_OUTBOX_PATH'); }
+function pkks_admin_auth_is_manual_delivery(): bool { return strtolower((string)(pkks_admin_auth_setting('PKKS_ADMIN_AUTH_DELIVERY_MODE', false) ?? '')) === 'manual'; }
 
 function pkks_admin_auth_base_url(): string
 {
@@ -219,6 +220,20 @@ function pkks_admin_auth_bootstrap_primary(string $email, string $password): arr
     } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
 }
 
+/* Manual-режим создаёт доступ без постоянного пароля до применения одноразовой ссылки. */
+function pkks_admin_auth_prepare_primary(string $email): array
+{
+    pkks_admin_auth_migrate();
+    $pdo = pkks_admin_auth_pdo(); pkks_admin_auth_begin_immediate($pdo);
+    try {
+        if ((int)$pdo->query("SELECT COUNT(*) FROM users WHERE role = 'primary_admin'")->fetchColumn() > 0) { throw new RuntimeException('Основной доступ уже создан.'); }
+        $now = pkks_admin_auth_now();
+        $pdo->prepare('INSERT INTO users(email, role, password_hash, active, session_version, created_at, updated_at) VALUES(:email, :role, NULL, 1, 1, :now, :now)')->execute(['email' => pkks_admin_auth_normalize_email($email), 'role' => 'primary_admin', 'now' => $now]);
+        $id = (int)$pdo->lastInsertId(); $pdo->prepare('INSERT INTO auth_events(event, user_id, created_at) VALUES(:event, :id, :now)')->execute(['event' => 'primary_prepared', 'id' => $id, 'now' => $now]); pkks_admin_auth_commit($pdo);
+        return pkks_admin_auth_user_by_id($id) ?? throw new RuntimeException('Не удалось подготовить основной доступ.');
+    } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+}
+
 function pkks_admin_auth_create_technical(string $email): array
 {
     $pdo = pkks_admin_auth_pdo(); pkks_admin_auth_begin_immediate($pdo);
@@ -264,6 +279,19 @@ function pkks_admin_auth_finalize_token_delivery(string $token): void
         if ($changed->rowCount() !== 1) { throw new RuntimeException('Не удалось подтвердить доставку.'); }
         $pdo->prepare('UPDATE action_tokens SET revoked_at = :now WHERE user_id = :user_id AND kind = :kind AND id <> :id AND delivered_at IS NOT NULL AND used_at IS NULL AND revoked_at IS NULL')->execute(['now' => $now, 'user_id' => $row['user_id'], 'kind' => $row['kind'], 'id' => $row['id']]);
         pkks_admin_auth_commit($pdo);
+    } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+}
+
+/* Ручная выдача подтверждает ссылку без SMTP и не выводит токен за пределы CLI. */
+function pkks_admin_auth_create_manual_activation_token(int $userId): string
+{
+    $pdo = pkks_admin_auth_pdo(); pkks_admin_auth_begin_immediate($pdo);
+    try {
+        $user = pkks_admin_auth_user_by_id($userId); if ($user === null || (int)$user['active'] !== 1) { throw new RuntimeException('Доступ пользователя недоступен.'); }
+        $now = pkks_admin_auth_now(); $token = bin2hex(random_bytes(32));
+        $pdo->prepare('UPDATE action_tokens SET revoked_at = :now WHERE user_id = :id AND kind = :kind AND used_at IS NULL AND revoked_at IS NULL')->execute(['now' => $now, 'id' => $userId, 'kind' => 'invite']);
+        $pdo->prepare('INSERT INTO action_tokens(user_id, kind, token_hash, expires_at, delivered_at, created_at) VALUES(:id, :kind, :hash, :expires, :delivered, :now)')->execute(['id' => $userId, 'kind' => 'invite', 'hash' => hash('sha256', $token), 'expires' => $now + 86400, 'delivered' => $now, 'now' => $now]);
+        pkks_admin_auth_commit($pdo); return $token;
     } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
 }
 
@@ -313,6 +341,9 @@ require_once __DIR__ . '/mail-transport.php';
 /* Доставка подтверждает токен только после успешной отправки в выбранный transport. */
 function pkks_admin_auth_deliver_mail(string $email, string $subject, string $path, string $token): void
 {
+    if (pkks_admin_auth_is_manual_delivery()) {
+        throw new RuntimeException('Почтовая доставка отключена.');
+    }
     $transport = strtolower((string)(pkks_admin_auth_setting('PKKS_ADMIN_MAIL_TRANSPORT', false) ?? ''));
     try {
         if ($transport === 'local') {

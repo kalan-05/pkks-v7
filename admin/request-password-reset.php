@@ -7,8 +7,9 @@ require_once __DIR__ . '/includes/rate-limit.php';
 require_once __DIR__ . '/includes/admin-layout.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$manualDelivery = pkks_admin_has_config() && pkks_admin_auth_is_manual_delivery();
 $sent = false;
-if ($method === 'POST') {
+if ($method === 'POST' && !$manualDelivery) {
     pkks_admin_start_session();
     pkks_admin_require_csrf(is_string($_POST['csrf_token'] ?? null) ? $_POST['csrf_token'] : null);
     $email = (string)($_POST['email'] ?? '');
@@ -33,14 +34,18 @@ pkks_admin_render_header('Восстановление доступа', ['body_c
     <section class="pkks-admin-auth-card" aria-labelledby="pkks-admin-reset-title">
         <p class="pkks-admin-brand">Правовая контора К. Сопрачева</p>
         <h1 id="pkks-admin-reset-title">Восстановление доступа</h1>
-        <p class="pkks-admin-lead">Укажите e-mail, связанный с доступом.</p>
-        <?php if ($sent) { pkks_admin_render_notice('Проверьте почту', 'Если адрес подходит, инструкция уже подготовлена.'); } ?>
-        <form class="pkks-admin-login-form" action="/admin/request-password-reset.php" method="post">
-            <?php echo pkks_admin_csrf_field(); ?>
-            <label for="pkks-admin-reset-email">E-mail</label>
-            <input id="pkks-admin-reset-email" name="email" type="email" autocomplete="email" required>
-            <button type="submit">Продолжить</button>
-        </form>
+        <?php if ($manualDelivery): ?>
+            <p class="pkks-admin-lead">Восстановление доступа выполняется через технического администратора.</p>
+        <?php else: ?>
+            <p class="pkks-admin-lead">Укажите e-mail, связанный с доступом.</p>
+            <?php if ($sent) { pkks_admin_render_notice('Проверьте почту', 'Если адрес подходит, инструкция уже подготовлена.'); } ?>
+            <form class="pkks-admin-login-form" action="/admin/request-password-reset.php" method="post">
+                <?php echo pkks_admin_csrf_field(); ?>
+                <label for="pkks-admin-reset-email">E-mail</label>
+                <input id="pkks-admin-reset-email" name="email" type="email" autocomplete="email" required>
+                <button type="submit">Продолжить</button>
+            </form>
+        <?php endif; ?>
         <p class="pkks-admin-footnote"><a href="/admin/login.php">Вернуться ко входу</a></p>
     </section>
 <?php pkks_admin_render_footer([['href' => '/', 'label' => 'Вернуться на сайт']]);
