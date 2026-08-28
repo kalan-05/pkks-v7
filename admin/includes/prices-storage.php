@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/data-revision-lock.php';
+
 function pkks_admin_prices_data_path(): string
 {
     return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'prices.json';
@@ -184,7 +186,7 @@ function pkks_admin_backup_prices_data(): string
         throw new RuntimeException('Prices JSON file not found for backup.');
     }
 
-    if (!is_dir($backupDir) && !mkdir($backupDir, 0775, true)) {
+    if (!is_dir($backupDir) && !@mkdir($backupDir, 0775, true)) {
         throw new RuntimeException('Prices backup directory creation failed.');
     }
 

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/data-revision-lock.php';
+
 function pkks_admin_services_data_path(): string
 {
     return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'services.json';
@@ -199,7 +201,7 @@ function pkks_admin_backup_services_data(): string
         throw new RuntimeException('Services JSON file not found for backup.');
     }
 
-    if (!is_dir($backupDir) && !mkdir($backupDir, 0775, true)) {
+    if (!is_dir($backupDir) && !@mkdir($backupDir, 0775, true)) {
         throw new RuntimeException('Services backup directory creation failed.');
     }
 

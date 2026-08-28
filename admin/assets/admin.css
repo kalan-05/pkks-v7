@@ -521,6 +521,10 @@ body.pkks-admin-page {
     background: #f1f8f4;
 }
 
+.pkks-admin-flash.pkks-admin-flash--success h2 {
+    color: #135f3c;
+}
+
 .pkks-admin-flash--error {
     border-color: rgba(160, 30, 30, 0.30);
     background: #fff4f4;
@@ -852,6 +856,13 @@ body.pkks-admin-page {
 }
 
 @media (max-width: 760px) {
+    .pkks-admin-page,
+    .pkks-admin-shell,
+    .pkks-admin-shell * {
+        min-width: 0;
+        max-width: 100%;
+    }
+
     .pkks-admin-section-grid {
         grid-template-columns: 1fr;
     }
@@ -885,6 +896,12 @@ body.pkks-admin-page {
     .pkks-admin-team-actions,
     .pkks-admin-team-actions .pkks-admin-button {
         width: 100%;
+    }
+
+    .pkks-admin-team-field input,
+    .pkks-admin-team-field textarea,
+    .pkks-admin-team-photo-submit {
+        max-width: 100%;
     }
 }
 

@@ -12,9 +12,11 @@ $currentLogin = pkks_admin_current_login() ?? 'администратор';
 $flash = pkks_admin_team_take_flash();
 $formData = isset($flash['formData']) && is_array($flash['formData']) ? $flash['formData'] : [];
 $loadError = false;
+$revision = '';
 
 try {
     $teamData = pkks_admin_load_team_data();
+    $revision = pkks_admin_data_revision(pkks_admin_team_data_path());
 } catch (RuntimeException) {
     $teamData = ['employees' => []];
     $loadError = true;
@@ -29,13 +31,13 @@ if ($flash === null) {
     if ($status === 'saved') {
         $flash = [
             'type' => 'success',
-            'title' => 'Изменения сохранены.',
+            'title' => '✓ Изменения сохранены',
             'messages' => [],
         ];
     } elseif ($status === 'photo-saved') {
         $flash = [
             'type' => 'success',
-            'title' => 'Фото сотрудника обновлено.',
+            'title' => '✓ Изменения сохранены',
             'messages' => [],
         ];
     } elseif ($status === 'photo-error') {
@@ -72,6 +74,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
 <?php else: ?>
     <form id="<?php echo pkks_admin_escape($mainFormId); ?>" action="/admin/api/save-team.php" method="post">
         <?php echo pkks_admin_csrf_field() . PHP_EOL; ?>
+        <input type="hidden" name="revision" value="<?php echo pkks_admin_escape($revision); ?>">
     </form>
 
     <div class="pkks-admin-team-form">
@@ -177,6 +180,7 @@ pkks_admin_render_topbar('Сотрудники', 'Вход выполнен: ' .
 
                 <form class="pkks-admin-team-photo-form" action="/admin/api/upload-team-photo.php" method="post" enctype="multipart/form-data">
                     <?php echo pkks_admin_csrf_field() . PHP_EOL; ?>
+                    <input type="hidden" name="revision" value="<?php echo pkks_admin_escape($revision); ?>">
                     <input type="hidden" name="employee_id" value="<?php echo pkks_admin_escape($employeeId); ?>">
 
                     <label class="pkks-admin-team-field pkks-admin-team-field--full" for="pkks-admin-team-<?php echo pkks_admin_escape($fieldId); ?>-photo-file">

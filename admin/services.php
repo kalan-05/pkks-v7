@@ -12,9 +12,11 @@ $currentLogin = pkks_admin_current_login() ?? 'администратор';
 $flash = pkks_admin_services_take_flash();
 $formData = isset($flash['formData']) && is_array($flash['formData']) ? $flash['formData'] : [];
 $loadError = false;
+$revision = '';
 
 try {
     $servicesData = pkks_admin_load_services_data();
+    $revision = pkks_admin_data_revision(pkks_admin_services_data_path());
 } catch (RuntimeException) {
     $servicesData = ['serviceGroups' => []];
     $loadError = true;
@@ -27,7 +29,7 @@ $serviceGroups = isset($servicesData['serviceGroups']) && is_array($servicesData
 if ($flash === null && ($_GET['status'] ?? '') === 'saved') {
     $flash = [
         'type' => 'success',
-        'title' => 'Изменения сохранены.',
+        'title' => '✓ Изменения сохранены',
         'messages' => [],
     ];
 }
@@ -65,6 +67,7 @@ pkks_admin_render_topbar('Услуги', 'Вход выполнен: ' . $curren
 <?php else: ?>
     <form class="pkks-admin-team-form pkks-admin-services-form" action="/admin/api/save-services.php" method="post">
         <?php echo pkks_admin_csrf_field() . PHP_EOL; ?>
+        <input type="hidden" name="revision" value="<?php echo pkks_admin_escape($revision); ?>">
 
 <?php foreach ($serviceGroups as $groupIndex => $group): ?>
     <?php if (!is_array($group)) {

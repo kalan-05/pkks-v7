@@ -26,6 +26,8 @@ try {
         pkks_admin_team_photo_fail($currentLogin, ['Сессия устарела. Обновите страницу и повторите загрузку.']);
     }
 
+    $submittedRevision = pkks_admin_posted_data_revision($_POST);
+
     $employeeId = pkks_admin_team_photo_post_string('employee_id');
 
     if ($employeeId === '') {
@@ -58,27 +60,40 @@ try {
         pkks_admin_team_photo_fail($currentLogin, $uploadErrors, $employeeId);
     }
 
-    $targetDir = pkks_admin_team_photo_target_dir();
-    $filename = pkks_admin_generate_team_photo_filename($employeeId, $upload['extension'], $targetDir);
-    $targetPath = $targetDir . DIRECTORY_SEPARATOR . $filename;
-    pkks_admin_assert_team_photo_target_path($targetDir, $targetPath);
-
-    if (!move_uploaded_file($upload['tmp_name'], $targetPath)) {
-        throw new RuntimeException('Team photo moving failed.');
-    }
-
-    $movedPhotoPath = $targetPath;
-    $photoPath = 'img/team/' . $filename;
-    $nextData = pkks_admin_update_team_employee_photo_fields(
-        $currentData,
+    $result = pkks_admin_with_data_lock(pkks_admin_team_data_path(), function () use (
+        $submittedRevision,
         $employeeId,
-        $photoPath,
-        $metadata['photoAlt'],
-        $metadata['photoTitle']
-    );
-    $backupPath = pkks_admin_backup_team_data();
+        $upload,
+        $metadata,
+        &$movedPhotoPath
+    ): array {
+        pkks_admin_assert_current_revision(pkks_admin_team_data_path(), $submittedRevision);
+        $currentData = pkks_admin_load_team_data();
+        $targetDir = pkks_admin_team_photo_target_dir();
+        $filename = pkks_admin_generate_team_photo_filename($employeeId, $upload['extension'], $targetDir);
+        $targetPath = $targetDir . DIRECTORY_SEPARATOR . $filename;
+        pkks_admin_assert_team_photo_target_path($targetDir, $targetPath);
 
-    pkks_admin_write_team_data($nextData);
+        if (!move_uploaded_file($upload['tmp_name'], $targetPath)) {
+            throw new RuntimeException('Team photo moving failed.');
+        }
+
+        $movedPhotoPath = $targetPath;
+        $photoPath = 'img/team/' . $filename;
+        $nextData = pkks_admin_update_team_employee_photo_fields(
+            $currentData,
+            $employeeId,
+            $photoPath,
+            $metadata['photoAlt'],
+            $metadata['photoTitle']
+        );
+        $backupPath = pkks_admin_backup_team_data();
+        pkks_admin_write_team_data($nextData);
+
+        return ['photoPath' => $photoPath, 'backupPath' => $backupPath];
+    });
+    $photoPath = $result['photoPath'];
+    $backupPath = $result['backupPath'];
     pkks_admin_write_audit_event('team_photo_update', [
         'login' => $currentLogin,
         'employee_id' => $employeeId,
@@ -89,11 +104,19 @@ try {
 
     $_SESSION['admin_flash'] = [
         'type' => 'success',
-        'title' => 'Фото сотрудника обновлено.',
-        'messages' => ['Резервная копия создана: ' . basename($backupPath) . '.'],
+        'title' => '✓ Изменения сохранены',
+        'messages' => [],
     ];
 
     header('Location: /admin/team.php?status=photo-saved', true, 302);
+    exit;
+} catch (PkksAdminStaleDataException) {
+    $_SESSION['admin_flash'] = [
+        'type' => 'error',
+        'title' => 'Данные изменены в другой вкладке.',
+        'messages' => ['Обновите страницу и повторите загрузку. Файл и данные не были изменены.'],
+    ];
+    header('Location: /admin/team.php?status=conflict', true, 302);
     exit;
 } catch (Throwable) {
     if ($movedPhotoPath !== null && is_file($movedPhotoPath)) {
