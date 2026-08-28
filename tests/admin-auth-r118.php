@@ -1,6 +1,15 @@
 <?php
 declare(strict_types=1);
 
+$runtime = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'pkks-r118-' . bin2hex(random_bytes(6));
+if (!mkdir($runtime, 0700, true) && !is_dir($runtime)) {
+    throw new RuntimeException('Не удалось подготовить изолированное окружение.');
+}
+putenv('PKKS_ADMIN_AUTH_DB_PATH=' . $runtime . DIRECTORY_SEPARATOR . 'accounts.sqlite');
+putenv('PKKS_ADMIN_OUTBOX_PATH=' . $runtime . DIRECTORY_SEPARATOR . 'outbox');
+putenv('PKKS_ADMIN_BASE_URL=https://example.invalid');
+putenv('PKKS_ADMIN_MAIL_TRANSPORT=local');
+
 require_once dirname(__DIR__) . '/admin/includes/auth.php';
 require_once dirname(__DIR__) . '/admin/includes/rate-limit.php';
 
@@ -22,24 +31,31 @@ r118_assert(!pkks_admin_is_login_blocked('limited@example.invalid'), 'rate-limit
 
 $technical = pkks_admin_auth_create_technical('technical@example.invalid');
 $invite = pkks_admin_auth_create_token((int)$technical['id'], 'invite');
+r118_assert(pkks_admin_auth_token_state($invite, 'invite')['state'] === 'pending', 'invite-pending');
+pkks_admin_auth_deliver_mail('technical@example.invalid', 'Тестовое приглашение', '/admin/accept-invite.php', $invite);
 r118_assert(pkks_admin_auth_token_state($invite, 'invite')['state'] === 'active', 'invite-active');
-pkks_admin_auth_write_outbox('technical@example.invalid', 'Тестовое приглашение', '/admin/accept-invite.php', $invite);
 r118_assert(pkks_admin_auth_consume_token_and_set_password($invite, 'invite', $password), 'invite-consume');
 r118_assert(!pkks_admin_auth_consume_token_and_set_password($invite, 'invite', $password), 'invite-one-time');
 r118_assert(pkks_admin_auth_verify('technical@example.invalid', $password) !== null, 'technical-login');
 
 $revokedInvite = pkks_admin_auth_create_token((int)$technical['id'], 'invite');
+$tokenRecipient = 'technical@example.invalid';
+pkks_admin_auth_deliver_mail($tokenRecipient, 'Тестовое приглашение', '/admin/accept-invite.php', $revokedInvite);
 $nextInvite = pkks_admin_auth_create_token((int)$technical['id'], 'invite');
+pkks_admin_auth_deliver_mail($tokenRecipient, 'Тестовое приглашение', '/admin/accept-invite.php', $nextInvite);
 r118_assert(pkks_admin_auth_token_state($revokedInvite, 'invite')['state'] === 'revoked', 'invite-revoked');
 $pdo = pkks_admin_auth_pdo(); $pdo->prepare('UPDATE action_tokens SET expires_at = :expired WHERE token_hash = :hash')->execute(['expired' => time() - 1, 'hash' => hash('sha256', $nextInvite)]);
 r118_assert(pkks_admin_auth_token_state($nextInvite, 'invite')['state'] === 'expired', 'invite-expired');
 
 $reset = pkks_admin_auth_create_token((int)$technical['id'], 'reset');
-pkks_admin_auth_write_outbox('technical@example.invalid', 'Тестовое восстановление', '/admin/reset-password.php', $reset);
+pkks_admin_auth_deliver_mail('technical@example.invalid', 'Тестовое восстановление', '/admin/reset-password.php', $reset);
 r118_assert(pkks_admin_auth_consume_token_and_set_password($reset, 'reset', $password), 'reset-consume');
 r118_assert(!pkks_admin_auth_consume_token_and_set_password($reset, 'reset', $password), 'reset-one-time');
 $revokedReset = pkks_admin_auth_create_token((int)$technical['id'], 'reset');
+$resetRecipient = 'technical@example.invalid';
+pkks_admin_auth_deliver_mail($resetRecipient, 'Тестовое восстановление', '/admin/reset-password.php', $revokedReset);
 $nextReset = pkks_admin_auth_create_token((int)$technical['id'], 'reset');
+pkks_admin_auth_deliver_mail($resetRecipient, 'Тестовое восстановление', '/admin/reset-password.php', $nextReset);
 r118_assert(pkks_admin_auth_token_state($revokedReset, 'reset')['state'] === 'revoked', 'reset-revoked');
 $pdo->prepare('UPDATE action_tokens SET expires_at = :expired WHERE token_hash = :hash')->execute(['expired' => time() - 1, 'hash' => hash('sha256', $nextReset)]);
 r118_assert(pkks_admin_auth_token_state($nextReset, 'reset')['state'] === 'expired', 'reset-expired');

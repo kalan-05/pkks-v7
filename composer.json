@@ -1,0 +1,17 @@
+{
+  "name": "pkks-v7/admin-mail-transport",
+  "description": "Безопасная SMTP-доставка уведомлений административного кабинета.",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.3",
+    "phpmailer/phpmailer": "^7.1"
+  },
+  "config": {
+    "allow-plugins": false,
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true
+  }
+}

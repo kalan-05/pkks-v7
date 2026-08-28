@@ -5,6 +5,11 @@ node_modules/
 .yarn-cache/
 .npm/
 
+# Composer-зависимость auth-почты собирается только из composer.lock.
+/vendor/autoload.php
+/vendor/composer/
+/vendor/phpmailer/
+
 # Package manager debug logs
 npm-debug.log*
 yarn-debug.log*

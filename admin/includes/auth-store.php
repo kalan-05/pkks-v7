@@ -2,9 +2,53 @@
 declare(strict_types=1);
 
 /* Хранилище авторизации намеренно настраивается только вне web-root. */
+function pkks_admin_auth_runtime_config(): array
+{
+    static $loaded = false;
+    static $config = [];
+
+    if ($loaded) {
+        return $config;
+    }
+
+    $loaded = true;
+    $path = getenv('PKKS_ADMIN_RUNTIME_CONFIG');
+    if (!is_string($path) || trim($path) === '') {
+        return $config;
+    }
+    $path = trim($path);
+    if (!pkks_admin_auth_is_absolute_path($path) || str_contains($path, "\0") || !is_file($path) || is_link($path)) {
+        throw new RuntimeException('Защищённая runtime-конфигурация недействительна.');
+    }
+
+    $resolved = realpath($path);
+    $documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? getenv('PKKS_ADMIN_DOCUMENT_ROOT');
+    $root = is_string($documentRoot) && $documentRoot !== '' ? realpath($documentRoot) : false;
+    if ($resolved === false || ($root !== false && pkks_admin_auth_path_is_inside($resolved, $root))) {
+        throw new RuntimeException('Runtime-конфигурация не может находиться в публичной зоне.');
+    }
+    if (DIRECTORY_SEPARATOR === '/' && (fileperms($resolved) & 0077) !== 0) {
+        throw new RuntimeException('Права runtime-конфигурации слишком широкие.');
+    }
+
+    $loadedConfig = require $resolved;
+    if (!is_array($loadedConfig)) {
+        throw new RuntimeException('Защищённая runtime-конфигурация недействительна.');
+    }
+    foreach ($loadedConfig as $key => $value) {
+        if (!is_string($key) || (!is_string($value) && !is_int($value) && !is_bool($value))) {
+            throw new RuntimeException('Защищённая runtime-конфигурация недействительна.');
+        }
+        $config[$key] = (string)$value;
+    }
+
+    return $config;
+}
+
 function pkks_admin_auth_setting(string $name, bool $required = true): ?string
 {
-    $value = getenv($name);
+    $config = pkks_admin_auth_runtime_config();
+    $value = array_key_exists($name, $config) ? $config[$name] : getenv($name);
     if (!is_string($value) || trim($value) === '') {
         if ($required) {
             throw new RuntimeException('Защищённое хранилище доступа не настроено.');
@@ -113,19 +157,30 @@ function pkks_admin_auth_migrate(): void
     $pdo = pkks_admin_auth_pdo();
     $pdo->exec('CREATE TABLE IF NOT EXISTS schema_migrations (version INTEGER PRIMARY KEY, applied_at INTEGER NOT NULL)');
     $versions = array_map('intval', $pdo->query('SELECT version FROM schema_migrations')->fetchAll(PDO::FETCH_COLUMN));
-    if (in_array(1, $versions, true)) { return; }
+    if (in_array(1, $versions, true) && in_array(2, $versions, true)) { return; }
     $hadDatabase = is_file(pkks_admin_auth_db_path()) && filesize(pkks_admin_auth_db_path()) > 0;
     if ($hadDatabase) { pkks_admin_auth_backup(dirname(pkks_admin_auth_db_path()) . DIRECTORY_SEPARATOR . 'auth-backups'); }
-    pkks_admin_auth_begin_immediate($pdo);
-    try {
-        $pdo->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT NOT NULL UNIQUE, role TEXT NOT NULL CHECK(role IN ('primary_admin', 'technical_admin')), password_hash TEXT, active INTEGER NOT NULL DEFAULT 1 CHECK(active IN (0,1)), session_version INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)");
-        $pdo->exec("CREATE TABLE IF NOT EXISTS action_tokens (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('invite', 'reset')), token_hash TEXT NOT NULL UNIQUE, expires_at INTEGER NOT NULL, used_at INTEGER, revoked_at INTEGER, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))");
-        $pdo->exec('CREATE INDEX IF NOT EXISTS action_tokens_lookup ON action_tokens(token_hash, kind)');
-        $pdo->exec('CREATE TABLE IF NOT EXISTS auth_attempts (key_hash TEXT PRIMARY KEY, attempts INTEGER NOT NULL, window_started_at INTEGER NOT NULL, blocked_until INTEGER NOT NULL DEFAULT 0, updated_at INTEGER NOT NULL)');
-        $pdo->exec('CREATE TABLE IF NOT EXISTS auth_events (id INTEGER PRIMARY KEY, event TEXT NOT NULL, user_id INTEGER, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))');
-        $pdo->prepare('INSERT INTO schema_migrations(version, applied_at) VALUES(1, :now)')->execute(['now' => pkks_admin_auth_now()]);
-        pkks_admin_auth_commit($pdo);
-    } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+    if (!in_array(1, $versions, true)) {
+        pkks_admin_auth_begin_immediate($pdo);
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, email TEXT NOT NULL UNIQUE, role TEXT NOT NULL CHECK(role IN ('primary_admin', 'technical_admin')), password_hash TEXT, active INTEGER NOT NULL DEFAULT 1 CHECK(active IN (0,1)), session_version INTEGER NOT NULL DEFAULT 1, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)");
+            $pdo->exec("CREATE TABLE IF NOT EXISTS action_tokens (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, kind TEXT NOT NULL CHECK(kind IN ('invite', 'reset')), token_hash TEXT NOT NULL UNIQUE, expires_at INTEGER NOT NULL, used_at INTEGER, revoked_at INTEGER, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))");
+            $pdo->exec('CREATE INDEX IF NOT EXISTS action_tokens_lookup ON action_tokens(token_hash, kind)');
+            $pdo->exec('CREATE TABLE IF NOT EXISTS auth_attempts (key_hash TEXT PRIMARY KEY, attempts INTEGER NOT NULL, window_started_at INTEGER NOT NULL, blocked_until INTEGER NOT NULL DEFAULT 0, updated_at INTEGER NOT NULL)');
+            $pdo->exec('CREATE TABLE IF NOT EXISTS auth_events (id INTEGER PRIMARY KEY, event TEXT NOT NULL, user_id INTEGER, created_at INTEGER NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id))');
+            $pdo->prepare('INSERT INTO schema_migrations(version, applied_at) VALUES(1, :now)')->execute(['now' => pkks_admin_auth_now()]);
+            pkks_admin_auth_commit($pdo);
+        } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+    }
+    if (!in_array(2, $versions, true)) {
+        pkks_admin_auth_begin_immediate($pdo);
+        try {
+            $pdo->exec('ALTER TABLE action_tokens ADD COLUMN delivered_at INTEGER');
+            $pdo->exec('UPDATE action_tokens SET delivered_at = created_at WHERE delivered_at IS NULL');
+            $pdo->prepare('INSERT INTO schema_migrations(version, applied_at) VALUES(2, :now)')->execute(['now' => pkks_admin_auth_now()]);
+            pkks_admin_auth_commit($pdo);
+        } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+    }
 }
 
 function pkks_admin_auth_user_by_email(string $email): ?array
@@ -183,8 +238,8 @@ function pkks_admin_auth_create_token(int $userId, string $kind): string
     $pdo = pkks_admin_auth_pdo(); pkks_admin_auth_begin_immediate($pdo);
     try {
         $user = pkks_admin_auth_user_by_id($userId); if ($user === null || (int)$user['active'] !== 1) { throw new RuntimeException('Доступ пользователя недоступен.'); }
-        $now = pkks_admin_auth_now(); $pdo->prepare('UPDATE action_tokens SET revoked_at = :now WHERE user_id = :id AND kind = :kind AND used_at IS NULL AND revoked_at IS NULL')->execute(['now' => $now, 'id' => $userId, 'kind' => $kind]);
-        $token = bin2hex(random_bytes(32)); $pdo->prepare('INSERT INTO action_tokens(user_id, kind, token_hash, expires_at, created_at) VALUES(:id, :kind, :hash, :expires, :now)')->execute(['id' => $userId, 'kind' => $kind, 'hash' => hash('sha256', $token), 'expires' => $now + ($kind === 'invite' ? 86400 : 1800), 'now' => $now]); pkks_admin_auth_commit($pdo); return $token;
+        $now = pkks_admin_auth_now();
+        $token = bin2hex(random_bytes(32)); $pdo->prepare('INSERT INTO action_tokens(user_id, kind, token_hash, expires_at, created_at, delivered_at) VALUES(:id, :kind, :hash, :expires, :now, NULL)')->execute(['id' => $userId, 'kind' => $kind, 'hash' => hash('sha256', $token), 'expires' => $now + ($kind === 'invite' ? 86400 : 1800), 'now' => $now]); pkks_admin_auth_commit($pdo); return $token;
     } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
 }
 
@@ -192,8 +247,30 @@ function pkks_admin_auth_token_state(string $token, string $kind): ?array
 {
     $statement = pkks_admin_auth_pdo()->prepare('SELECT action_tokens.*, users.email, users.role, users.active FROM action_tokens JOIN users ON users.id = action_tokens.user_id WHERE token_hash = :hash AND kind = :kind LIMIT 1');
     $statement->execute(['hash' => hash('sha256', $token), 'kind' => $kind]); $row = $statement->fetch(); if (!is_array($row)) { return null; }
-    $row['state'] = $row['revoked_at'] !== null || (int)$row['active'] !== 1 ? 'revoked' : ($row['used_at'] !== null ? 'consumed' : ((int)$row['expires_at'] < pkks_admin_auth_now() ? 'expired' : 'active'));
+    $row['state'] = $row['revoked_at'] !== null || (int)$row['active'] !== 1 ? 'revoked' : ($row['used_at'] !== null ? 'consumed' : ($row['delivered_at'] === null ? 'pending' : ((int)$row['expires_at'] < pkks_admin_auth_now() ? 'expired' : 'active')));
     return $row;
+}
+
+function pkks_admin_auth_finalize_token_delivery(string $token): void
+{
+    $pdo = pkks_admin_auth_pdo(); pkks_admin_auth_begin_immediate($pdo);
+    try {
+        $statement = $pdo->prepare('SELECT id, user_id, kind FROM action_tokens WHERE token_hash = :hash AND delivered_at IS NULL AND used_at IS NULL AND revoked_at IS NULL AND expires_at >= :now LIMIT 1');
+        $statement->execute(['hash' => hash('sha256', $token), 'now' => pkks_admin_auth_now()]); $row = $statement->fetch();
+        if (!is_array($row)) { throw new RuntimeException('Уведомление устарело.'); }
+        $now = pkks_admin_auth_now();
+        $changed = $pdo->prepare('UPDATE action_tokens SET delivered_at = :now WHERE id = :id AND delivered_at IS NULL');
+        $changed->execute(['now' => $now, 'id' => $row['id']]);
+        if ($changed->rowCount() !== 1) { throw new RuntimeException('Не удалось подтвердить доставку.'); }
+        $pdo->prepare('UPDATE action_tokens SET revoked_at = :now WHERE user_id = :user_id AND kind = :kind AND id <> :id AND delivered_at IS NOT NULL AND used_at IS NULL AND revoked_at IS NULL')->execute(['now' => $now, 'user_id' => $row['user_id'], 'kind' => $row['kind'], 'id' => $row['id']]);
+        pkks_admin_auth_commit($pdo);
+    } catch (Throwable $exception) { pkks_admin_auth_rollback($pdo); throw $exception; }
+}
+
+function pkks_admin_auth_cancel_token_delivery(string $token): void
+{
+    $statement = pkks_admin_auth_pdo()->prepare('UPDATE action_tokens SET revoked_at = :now WHERE token_hash = :hash AND delivered_at IS NULL AND used_at IS NULL AND revoked_at IS NULL');
+    $statement->execute(['now' => pkks_admin_auth_now(), 'hash' => hash('sha256', $token)]);
 }
 
 function pkks_admin_auth_consume_token_and_set_password(string $token, string $kind, string $password): bool
@@ -223,18 +300,31 @@ function pkks_admin_auth_users(): array { return pkks_admin_auth_pdo()->query('S
 
 function pkks_admin_auth_write_outbox(string $email, string $subject, string $path, string $token): void
 {
+    $email = pkks_admin_auth_mail_header($email, 'recipient');
+    $subject = pkks_admin_auth_mail_header($subject, 'subject');
     if (!str_ends_with(strtolower($email), '.invalid')) { throw new RuntimeException('Локальная почта разрешена только для адресов .invalid.'); }
     $outbox = pkks_admin_auth_outbox_path(); if (!is_dir($outbox) && !mkdir($outbox, 0700, true) && !is_dir($outbox)) { throw new RuntimeException('Не удалось создать локальный outbox.'); }
-    $url = pkks_admin_auth_base_url() . $path . '?token=' . rawurlencode($token); $file = rtrim($outbox, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . gmdate('Ymd-His') . '-' . bin2hex(random_bytes(4)) . '.eml';
+    $url = pkks_admin_auth_mail_url($path, $token); $file = rtrim($outbox, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . gmdate('Ymd-His') . '-' . bin2hex(random_bytes(4)) . '.eml';
     if (file_put_contents($file, "To: {$email}\nSubject: {$subject}\n\n{$url}\n", LOCK_EX) === false) { throw new RuntimeException('Не удалось сохранить локальное уведомление.'); } @chmod($file, 0600);
 }
 
-/* Единая точка доставки: в Runner-контуре доступен только закрытый local transport. */
+require_once __DIR__ . '/mail-transport.php';
+
+/* Доставка подтверждает токен только после успешной отправки в выбранный transport. */
 function pkks_admin_auth_deliver_mail(string $email, string $subject, string $path, string $token): void
 {
-    $transport = getenv('PKKS_ADMIN_MAIL_TRANSPORT');
-    if ($transport !== false && $transport !== '' && $transport !== 'local') {
-        throw new RuntimeException('Отправка уведомлений не настроена.');
+    $transport = strtolower((string)(pkks_admin_auth_setting('PKKS_ADMIN_MAIL_TRANSPORT', false) ?? ''));
+    try {
+        if ($transport === 'local') {
+            pkks_admin_auth_write_outbox($email, $subject, $path, $token);
+        } elseif ($transport === 'smtp') {
+            pkks_admin_auth_deliver_smtp($email, $subject, $path, $token);
+        } else {
+            throw new RuntimeException('Почтовый transport не настроен.');
+        }
+        pkks_admin_auth_finalize_token_delivery($token);
+    } catch (Throwable $exception) {
+        try { pkks_admin_auth_cancel_token_delivery($token); } catch (Throwable) {}
+        throw new RuntimeException('Не удалось доставить защищённое уведомление.');
     }
-    pkks_admin_auth_write_outbox($email, $subject, $path, $token);
 }
