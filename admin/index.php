@@ -4,20 +4,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/admin-layout.php';
 
-if (!pkks_admin_has_config()) {
-    pkks_admin_render_header('Админ-панель', ['body_class' => 'pkks-admin-dashboard-page']);
-    pkks_admin_render_topbar('Админ-панель', 'Доступ ещё не настроен');
-    pkks_admin_render_notice(
-        'Админ-доступ ещё не настроен.',
-        'Создайте config/admin-auth.php по примеру config/admin-auth.php.example.'
-    );
-    pkks_admin_render_footer([
-        ['href' => '/admin/login.php', 'label' => 'К экрану входа'],
-        ['href' => '/', 'label' => 'Вернуться на сайт'],
-    ]);
-    exit;
-}
-
 pkks_admin_require_auth();
 $currentLogin = pkks_admin_current_login() ?? 'администратор';
 
@@ -31,6 +17,9 @@ pkks_admin_render_topbar('Админ-панель', 'Вход выполнен: 
             <p>Вы вошли как <?php echo pkks_admin_escape($currentLogin); ?>. Разделы «Сотрудники», «Услуги» и «Цены» подключены, остальные разделы пока недоступны.</p>
         </div>
         <div class="pkks-admin-dashboard-actions" aria-label="Навигация админ-панели">
+            <?php if (pkks_admin_current_role() === 'primary_admin'): ?>
+                <a class="pkks-admin-button pkks-admin-button--secondary" href="/admin/users.php">Пользователи и доступ</a>
+            <?php endif; ?>
             <a class="pkks-admin-button pkks-admin-button--primary" href="/admin/logout.php">Выйти</a>
             <a class="pkks-admin-button pkks-admin-button--secondary" href="/">Вернуться на сайт</a>
         </div>

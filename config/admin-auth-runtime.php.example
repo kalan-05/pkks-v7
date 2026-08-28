@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+/*
+ * Этот шаблон не считывается сайтом и не содержит секретов.
+ * На хостинге передайте значения только через закрытую конфигурацию окружения:
+ * PKKS_ADMIN_AUTH_DB_PATH — абсолютный путь к SQLite вне DOCUMENT_ROOT;
+ * PKKS_ADMIN_OUTBOX_PATH — абсолютный путь к локальному outbox вне DOCUMENT_ROOT;
+ * PKKS_ADMIN_BASE_URL — доверенный HTTPS-адрес сайта.
+ */
+
+return [];
