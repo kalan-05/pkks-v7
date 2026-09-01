@@ -277,6 +277,14 @@ $pricesData = pkks_load_json(__DIR__ . '/data/prices.json');
                 </div>
               </li>
               <li class="timeline-content">
+                <time datetime="2025">2025 год</time>
+                <div class="content">
+                  <h3>Управляющая организация личного фонда</h3>
+                  <p>ООО «Правовая контора К. Сопрачева» назначено организацией, выполняющей функции единоличного
+                    исполнительного органа личного фонда.</p>
+                </div>
+              </li>
+              <li class="timeline-content">
                 <time>Сегодня</time>
                 <div class="content">
                   <h3>Практика юридического сопровождения</h3>
